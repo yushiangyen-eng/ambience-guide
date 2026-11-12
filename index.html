@@ -1,964 +1,527 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>喜瑞飯店 Ambience Hotel｜周邊探索指南 Neighborhood Guide</title>
-    <!-- 載入 Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 載入 Google Fonts: Inter 與 Noto Sans TC / Noto Serif TC 營造精品飯店質感 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        // 自訂 Tailwind 設計系統色彩與字體
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            dark: '#1E293B',      // 深炭灰主色
-                            charcoal: '#0F172A',  // 更深層炭黑
-                            gold: '#B48A5A',      // 暖沙金強調色
-                            goldLight: '#D4B48C', // 淺沙金
-                            goldBg: '#F5EFE6',    // 暖沙金極淺底色
-                            cream: '#FAF9F6',     // 溫潤米白背景
-                            stone: '#E7E5E4',     // 暖灰邊框
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
-                        serif: ['Noto Serif TC', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* 隱藏水平捲動條但保留滑動功能（用於手機版分類膠囊列） */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        /* 平滑捲動 */
-        html {
-            scroll-behavior: smooth;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>喜瑞飯店 Ambience Hotel｜周邊美食與景點探索指南</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      background-color: #FAF9F6;
+      color: #1E293B;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
-<body class="bg-brand-cream text-brand-dark font-sans antialiased selection:bg-brand-gold selection:text-white min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
-    <!-- ==========================================
-         1. 頂部 Hero 區塊 (含雙語切換與管理設定入口)
-         ========================================== -->
-    <header class="relative bg-brand-dark text-white overflow-hidden">
-        <!-- 背景裝飾幾何線條 -->
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full border border-brand-gold"></div>
-            <div class="absolute top-12 -right-12 w-72 h-72 rounded-full border border-brand-gold"></div>
+  <!-- 頂部品牌視覺區 -->
+  <header class="bg-[#1E293B] text-white pt-8 pb-10 px-4 sm:px-6 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#B48A5A]/20 border border-[#B48A5A]/40 text-[#E6C79C] text-xs font-medium mb-3">
+          <span>AMBIENCE HOTEL TAIPEI</span>
+          <span>•</span>
+          <span data-i18n="originTag">出發點：台北市中山區長安東路一段64號</span>
         </div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight" data-i18n="title">
+          喜瑞飯店｜周邊探索指南
+        </h1>
+        <p class="text-slate-300 text-sm sm:text-base mt-1.5 max-w-xl" data-i18n="subtitle">
+          精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟與 24H 便利生活圈。
+        </p>
+      </div>
 
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 sm:py-14 relative z-10">
-            <!-- 頂部導覽列：飯店識別 & 雙語切換按鈕 -->
-            <div class="flex items-center justify-between mb-8 sm:mb-10">
-                <div class="flex items-center space-x-2.5">
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-gold"></span>
-                    <span class="text-xs sm:text-sm tracking-[0.2em] uppercase text-brand-goldLight font-medium">
-                        AMBIENCE HOTEL TAIPEI · CONCIERGE GUIDE
-                    </span>
-                </div>
+      <!-- 語系切換按鈕 -->
+      <div class="self-start sm:self-center">
+        <button id="langToggle" onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-sm font-medium transition flex items-center gap-2">
+          <svg class="w-4 h-4 text-[#E6C79C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+          <span id="langLabel">English</span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-                <!-- 雙語切換按鈕 (繁體中文 / English) -->
-                <button id="langToggleBtn" onclick="toggleLanguage()" 
-                    class="flex items-center space-x-2 bg-white/10 hover:bg-white/20 active:scale-95 transition-all border border-white/20 rounded-full px-4 py-2 text-xs sm:text-sm font-medium backdrop-blur-sm cursor-pointer">
-                    <svg class="w-4 h-4 text-brand-goldLight" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
-                    </svg>
-                    <span id="langLabel">English</span>
-                </button>
-            </div>
-
-            <!-- 主標題與副標題 -->
-            <div class="max-w-2xl">
-                <h1 id="heroTitle" class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight mb-3">
-                    喜瑞飯店｜周邊探索指南
-                </h1>
-                <p id="heroSubtitle" class="text-slate-300 text-sm sm:text-base lg:text-lg font-light leading-relaxed">
-                    精選步行可達的台北在地美食、精品咖啡廳與林蔭藝文散步地圖，為您的旅途獻上最道地的中山區日常。
-                </p>
-            </div>
-
-            <!-- 飯店基準點提示標籤 -->
-            <div class="mt-6 inline-flex items-center space-x-2 bg-brand-charcoal/60 border border-white/10 rounded-xl px-3.5 py-2 text-xs text-slate-300">
-                <svg class="w-4 h-4 text-brand-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span id="hotelBaseLabel">出發基準點：喜瑞飯店 Ambience Hotel（台北市中山區長安東路一段 64 號）</span>
-            </div>
+  <!-- 置頂篩選與搜尋列 -->
+  <div class="sticky top-0 z-30 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 space-y-3">
+      <div class="flex flex-col sm:flex-row gap-2.5">
+        <!-- 關鍵字搜尋 -->
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <input id="searchInput" type="text" oninput="renderPlaces()" placeholder="搜尋店名、料理或特色（例：豬腳、咖啡、熱炒）..." class="w-full pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-[#B48A5A] focus:ring-1 focus:ring-[#B48A5A]" />
         </div>
-    </header>
-
-    <!-- ==========================================
-         2. 智慧篩選與搜尋列 (Sticky 黏性置頂設計，方便手機單手操作)
-         ========================================== -->
-    <section class="sticky top-0 z-30 bg-brand-cream/95 backdrop-blur-md border-b border-brand-stone shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3.5">
-            
-            <!-- 上排：關鍵字搜尋 + 步行距離篩選 -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <!-- 搜尋框 -->
-                <div class="relative flex-1">
-                    <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                    <input type="text" id="searchInput" oninput="applyFilters()"
-                        placeholder="搜尋店名、料理類型或必點招牌（例如：牛肉麵、手沖、宵夜）..."
-                        class="w-full pl-10 pr-9 py-2.5 bg-white border border-brand-stone rounded-xl text-sm text-brand-dark placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:border-brand-gold transition-all">
-                    <!-- 清除搜尋按鈕 -->
-                    <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-brand-dark">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <!-- 步行距離快速篩選 -->
-                <div class="flex items-center space-x-2 shrink-0">
-                    <span id="walkFilterLabel" class="text-xs font-medium text-slate-500 hidden md:inline">步行時間：</span>
-                    <div class="inline-flex bg-white border border-brand-stone rounded-xl p-1 w-full sm:w-auto">
-                        <button onclick="setWalkFilter('all')" data-walk="all"
-                            class="walk-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-brand-dark text-white">
-                            <span data-i18n="walkAll">全部距離</span>
-                        </button>
-                        <button onclick="setWalkFilter(5)" data-walk="5"
-                            class="walk-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-600 hover:text-brand-dark">
-                            <span data-i18n="walk5">5 分鐘內</span>
-                        </button>
-                        <button onclick="setWalkFilter(15)" data-walk="15"
-                            class="walk-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-600 hover:text-brand-dark">
-                            <span data-i18n="walk15">15 分鐘內</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 下排：分類篩選膠囊按鈕 (支援手機橫向滑動) -->
-            <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-0.5" id="categoryContainer">
-                <button onclick="setCategory('all')" data-cat="all"
-                    class="cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-brand-gold text-white shadow-sm">
-                    <span data-i18n="catAll">全部 All</span>
-                </button>
-                <button onclick="setCategory('food')" data-cat="food"
-                    class="cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-white text-slate-600 border border-brand-stone hover:border-brand-gold">
-                    <span data-i18n="catFood">🍜 在地美食 Food</span>
-                </button>
-                <button onclick="setCategory('cafe')" data-cat="cafe"
-                    class="cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-white text-slate-600 border border-brand-stone hover:border-brand-gold">
-                    <span data-i18n="catCafe">☕ 咖啡甜點 Cafe</span>
-                </button>
-                <button onclick="setCategory('spot')" data-cat="spot"
-                    class="cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-white text-slate-600 border border-brand-stone hover:border-brand-gold">
-                    <span data-i18n="catSpot">🌿 景點散步 Spot</span>
-                </button>
-                <button onclick="setCategory('shop')" data-cat="shop"
-                    class="cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-white text-slate-600 border border-brand-stone hover:border-brand-gold">
-                    <span data-i18n="catShop">🛍️ 生活採買 Shop</span>
-                </button>
-            </div>
+        <!-- 步行距離篩選 -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <button onclick="setWalkFilter('all')" data-walk="all" class="walk-btn active px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition" data-i18n="walkAll">全部距離</button>
+          <button onclick="setWalkFilter(5)" data-walk="5" class="walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk5">步行 5 分鐘內</button>
+          <button onclick="setWalkFilter(15)" data-walk="15" class="walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition" data-i18n="walk15">步行 15 分鐘內</button>
         </div>
-    </section>
+      </div>
 
-    <!-- ==========================================
-         3. 店家卡片展示網格區
-         ========================================== -->
-    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- 結果統計與資料來源狀態列 -->
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
-            <p class="text-xs sm:text-sm text-slate-500">
-                <span id="resultCountText">顯示 8 個精選推薦地點</span>
-            </p>
-            <div id="dataSourceBadge" class="inline-flex items-center space-x-1.5 text-xs text-slate-500 bg-white border border-brand-stone px-3 py-1 rounded-full">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span id="dataSourceLabel">資料來源：喜瑞飯店精選資料庫</span>
-            </div>
-        </div>
+      <!-- 分類標籤 -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+        <button onclick="setCategory('all')" data-cat="all" class="cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap" data-i18n="catAll">全部推薦</button>
+        <button onclick="setCategory('food')" data-cat="food" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catFood">🍜 在地美食</button>
+        <button onclick="setCategory('cafe')" data-cat="cafe" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catCafe">☕ 咖啡甜點</button>
+        <button onclick="setCategory('spot')" data-cat="spot" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catSpot">🌿 景點散步</button>
+        <button onclick="setCategory('shop')" data-cat="shop" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catShop">🛍️ 伴手禮 / 生活</button>
+      </div>
+    </div>
+  </div>
 
-        <!-- 卡片容器：手機單欄、平板雙欄、桌機三欄 -->
-        <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 卡片由 JavaScript 動態渲染 -->
-        </div>
-
-        <!-- 查無資料時的友善提示 -->
-        <div id="emptyState" class="hidden text-center py-16 px-4 bg-white rounded-2xl border border-brand-stone">
-            <div class="w-12 h-12 rounded-full bg-brand-goldBg text-brand-gold flex items-center justify-center mx-auto mb-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-            </div>
-            <h3 id="emptyTitle" class="text-base font-semibold text-brand-dark mb-1">找不到符合條件的店家</h3>
-            <p id="emptyDesc" class="text-sm text-slate-500 mb-4">請嘗試更換搜尋關鍵字，或放寬步行時間與分類篩選條件。</p>
-            <button onclick="resetAllFilters()" id="resetBtn"
-                class="px-5 py-2.5 bg-brand-dark text-white text-xs sm:text-sm font-medium rounded-xl hover:bg-brand-charcoal transition-colors">
-                重設所有篩選條件
-            </button>
-        </div>
-    </main>
-
-    <!-- ==========================================
-         4. 頁尾 & 管理者 Google 試算表串接入口
-         ========================================== -->
-    <footer class="bg-white border-t border-brand-stone mt-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="text-center sm:text-left">
-                <p class="text-sm font-serif font-semibold text-brand-dark">喜瑞飯店 Ambience Hotel｜禮賓部數位周邊指南</p>
-                <p id="footerNote" class="text-xs text-slate-400 mt-1">台北市中山區長安東路一段 64 號 · 營業時間可能依店家現場公告調整，出發前建議點擊地圖確認。</p>
-            </div>
-
-            <!-- 管理者設定按鈕：開啟 Google Sheets CSV 串接與範本下載彈窗 -->
-            <button onclick="openAdminModal()"
-                class="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl border border-brand-stone bg-brand-cream hover:bg-brand-goldBg hover:border-brand-gold text-xs font-medium text-slate-600 hover:text-brand-dark transition-all cursor-pointer">
-                <span>⚙️</span>
-                <span id="adminBtnText">串接 Google 試算表說明 / 測試</span>
-            </button>
-        </div>
-    </footer>
-
-    <!-- ==========================================
-         5. 管理者彈窗：Google Sheets CSV 動態串接設定與說明
-         ========================================== -->
-    <div id="adminModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-brand-charcoal/60 backdrop-blur-sm p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-brand-stone relative my-8">
-            <!-- 關閉按鈕 -->
-            <button onclick="closeAdminModal()" class="absolute top-5 right-5 text-slate-400 hover:text-brand-dark p-1.5 rounded-lg hover:bg-slate-100">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-
-            <div class="flex items-center space-x-2 text-brand-gold text-xs font-semibold uppercase tracking-wider mb-1">
-                <span>CMS & DATA INTEGRATION</span>
-            </div>
-            <h2 class="text-xl font-serif font-bold text-brand-dark mb-3">Google 試算表動態資料串接</h2>
-            <p class="text-sm text-slate-600 leading-relaxed mb-5">
-                本網頁已內建 <strong>CSV 即時解析引擎</strong>。櫃檯或行銷人員只需維護一份 Google 試算表，無需修改任何網頁程式碼，即可讓房客掃碼看到最新的周邊店家資訊。
-            </p>
-
-            <!-- 步驟說明 -->
-            <div class="bg-brand-cream rounded-xl p-4 border border-brand-stone space-y-2.5 text-xs text-slate-700 mb-5">
-                <p class="font-semibold text-brand-dark">📋 三步驟完成串接：</p>
-                <ol class="list-decimal list-inside space-y-1.5 text-slate-600">
-                    <li>點擊下方按鈕下載<strong>「標準 CSV 範本」</strong>並匯入您的 Google 試算表。</li>
-                    <li>在 Google 試算表點選左上角 <strong>檔案 → 共用 → 發佈到網路</strong>，格式選擇 <strong>「逗號分隔值 (.csv)」</strong> 並複製網址。</li>
-                    <li>將產生的 CSV 網址貼入下方欄位測試載入（正式上線時只需將該網址寫入程式碼中的 <code class="bg-white px-1.5 py-0.5 rounded border text-brand-dark">GOOGLE_SHEET_CSV_URL</code> 變數即可）。</li>
-                </ol>
-            </div>
-
-            <!-- 下載範本按鈕 -->
-            <div class="mb-5">
-                <button onclick="downloadSampleCSV()"
-                    class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 py-2.5 bg-brand-goldBg text-brand-dark border border-brand-gold/40 hover:bg-brand-gold hover:text-white rounded-xl text-xs font-semibold transition-all cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                    </svg>
-                    <span>下載標準 Google 試算表欄位範本 (.csv)</span>
-                </button>
-            </div>
-
-            <!-- 即時測試輸入框 -->
-            <div class="space-y-2 mb-5">
-                <label for="csvUrlInput" class="block text-xs font-semibold text-brand-dark">測試載入發佈的 Google Sheets CSV 網址：</label>
-                <input type="url" id="csvUrlInput" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv"
-                    class="w-full px-3.5 py-2.5 bg-white border border-brand-stone rounded-xl text-xs text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-gold">
-                <p id="modalStatusMsg" class="text-xs hidden"></p>
-            </div>
-
-            <!-- 底部操作按鈕 -->
-            <div class="flex flex-col sm:flex-row justify-end gap-2.5 pt-2 border-t border-brand-stone">
-                <button onclick="restoreDefaultData()"
-                    class="px-4 py-2.5 rounded-xl border border-brand-stone text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer">
-                    還原喜瑞飯店精選 8 筆資料
-                </button>
-                <button onclick="loadFromInputUrl()"
-                    class="px-5 py-2.5 rounded-xl bg-brand-dark text-white text-xs font-medium hover:bg-brand-charcoal transition-colors cursor-pointer">
-                    立即測試載入資料
-                </button>
-            </div>
-        </div>
+  <!-- 主要卡片列表區 -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-xs sm:text-sm text-slate-500">
+        <span data-i18n="showingCount">共顯示</span> <strong id="resultCount" class="text-slate-800">0</strong> <span data-i18n="placesUnit">個精選地點</span>
+      </p>
+      <span id="dataSourceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">正在載入 Google 試算表...</span>
     </div>
 
-    <!-- ==========================================
-         6. JavaScript 核心邏輯 (雙語資料、篩選器、Google Sheets CSV 解析)
-         ========================================== -->
-    <script>
-        /**
-         * 【管理者設定區】
-         * 若您已將 Google 試算表「發佈到網路」為 CSV，請將網址貼在下方引號中。
-         * 留空 ('') 則預設顯示下方「喜瑞飯店（長安東路一段 64 號）」精選 8 筆周邊資料。
-         */
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
+    <!-- 卡片網格 -->
+    <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
-        // 當前語系狀態 ('zh' 或 'en')
-        let currentLang = 'zh';
-        // 當前篩選狀態
-        let currentCategory = 'all';
-        let currentWalkMax = 'all';
-        // 當前顯示中的店家資料陣列
-        let placesData = [];
+    <!-- 無結果提示 -->
+    <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-stone-200/80">
+      <p class="text-slate-500 text-sm" data-i18n="noResults">找不到符合條件的地點，請嘗試清除篩選條件。</p>
+      <button onclick="resetFilters()" class="mt-3 px-4 py-2 bg-[#1E293B] text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition" data-i18n="resetBtn">重設篩選</button>
+    </div>
+  </main>
 
-        /**
-         * 喜瑞飯店 Ambience Hotel（台北市中山區長安東路一段 64 號）專屬周邊精選資料庫
-         * 欄位結構與 Google Sheets CSV 規範（category, walk_mins, name_zh, name_en, tag_zh, tag_en, desc_zh, desc_en, hours, map_url, image_url）完全一致
-         */
-        const DEFAULT_PLACES_DATA = [
-            {
-                id: 1,
-                category: 'food',
-                walk_mins: 12,
-                name_zh: '阜杭豆漿',
-                name_en: 'Fuhang Soy Milk',
-                tag_zh: '米其林必比登 · 經典台式早餐',
-                tag_en: 'Michelin Bib Gourmand · Iconic Breakfast',
-                desc_zh: '位於華山市場二樓的排隊名店，必點炭火現烤厚餅夾蛋、香濃鹹豆漿與焦糖甜餅，建議平日十點半後前往避開長龍。',
-                desc_en: 'Legendary Taipei breakfast spot on the 2nd floor of Huashan Market, famous for thick oven-baked flatbreads, savory soy milk, and sweet sesame pastries.',
-                hours: '05:30 - 12:30 (週一公休)',
-                map_url: 'https://maps.google.com/?q=阜杭豆漿',
-                image_url: ''
-            },
-            {
-                id: 2,
-                category: 'cafe',
-                walk_mins: 8,
-                name_zh: 'Fika Fika Cafe 伊通公園店',
-                name_en: 'Fika Fika Cafe (Yitong Park)',
-                tag_zh: '北歐烘焙冠軍 · 綠意採光咖啡',
-                tag_en: 'Nordic Roasting Champion · Sunlit Cafe',
-                desc_zh: '緊鄰伊通公園的北歐風格精品咖啡館，大片落地窗採光極佳，推薦招牌陽光曼巴與手作肉桂捲，享受悠閒午後。',
-                desc_en: 'Nordic-style specialty coffee shop facing Yitong Park with floor-to-ceiling windows, famous for award-winning roasts and cinnamon rolls.',
-                hours: '08:00 - 21:00',
-                map_url: 'https://maps.google.com/?q=Fika+Fika+Cafe+伊通公園店',
-                image_url: ''
-            },
-            {
-                id: 3,
-                category: 'food',
-                walk_mins: 12,
-                name_zh: '富霸王豬腳極品餐廳',
-                name_en: 'Fubawang Pork Knuckle',
-                tag_zh: '四平陽光商圈 · 排隊滷豬腳名店',
-                tag_en: 'Siping Market · Famous Braised Pork',
-                desc_zh: '位於四平商圈的超人氣台式美食，油亮軟嫩的腿扣與腿節入口即化，搭配滷肉飯與筍絲最道地，建議避開正餐尖峰。',
-                desc_en: 'Iconic local eatery in Siping Shopping District serving melt-in-your-mouth braised pork knuckles, braised pork rice, and bamboo shoots.',
-                hours: '11:00 - 19:30 (週日、一公休)',
-                map_url: 'https://maps.google.com/?q=富霸王豬腳極品餐廳',
-                image_url: ''
-            },
-            {
-                id: 4,
-                category: 'food',
-                walk_mins: 2,
-                name_zh: '長安東路一段熱炒一條街（臨洋港生猛活海鮮）',
-                name_en: "Chang'an E. Rd. Stir-Fry Street (Linyanggang)",
-                tag_zh: '飯店轉角即達 · 體驗道地台式夜生活',
-                tag_en: 'Steps from Hotel · Authentic Taiwanese Nightlife',
-                desc_zh: '出飯店步行兩分鐘即達台北最負盛名的熱炒街，現撈海鮮與鑊氣十足的快炒料理，適合三五好友體驗台灣道地宵夜文化。',
-                desc_en: "Just two minutes from the hotel lies Taipei's famous stir-fry street, offering fresh seafood and lively Taiwanese late-night dining.",
-                hours: '17:00 - 02:00',
-                map_url: 'https://maps.google.com/?q=臨洋港生猛活海鮮+長安店',
-                image_url: ''
-            },
-            {
-                id: 5,
-                category: 'spot',
-                walk_mins: 15,
-                name_zh: '光點台北 珈琲時光',
-                name_en: 'SPOT-Taipei & Café Lumière',
-                tag_zh: '中山北路林蔭大道 · 歷史古蹟藝文空間',
-                tag_en: 'Zhongshan N. Rd. · Historic Cinema & Cafe',
-                desc_zh: '前身為前美國大使官邸的三級古蹟，純白洋樓融合藝術電影院與庭園咖啡廳，沿著中山北路林蔭大道散步即可抵達。',
-                desc_en: "Housed in the former US Ambassador's Residence, this historic white mansion blends an arthouse cinema with a tranquil garden cafe.",
-                hours: '11:00 - 21:30',
-                map_url: 'https://maps.google.com/?q=光點台北',
-                image_url: ''
-            },
-            {
-                id: 6,
-                category: 'food',
-                walk_mins: 5,
-                name_zh: '條通文化日式居酒屋（林森北路六條通）',
-                name_en: 'Tiaotong Izakaya District (Linsen N. Rd.)',
-                tag_zh: '百年日式風情 · 職人串燒與深夜食堂',
-                tag_en: 'Historic Japanese Quarter · Yakitori & Sake',
-                desc_zh: '承襲日治時期大正町歷史底蘊的巷弄商圈，聚集眾多道地日式居酒屋、燒鳥與昭和風酒吧，夜晚散步別具異國情調。',
-                desc_en: 'Steeped in Japanese-era heritage, these atmospheric alleys feature authentic yakitori joints, izakayas, and Showa-style bars.',
-                hours: '18:00 - 01:00',
-                map_url: 'https://maps.google.com/?q=林森北路六條通',
-                image_url: ''
-            },
-            {
-                id: 7,
-                category: 'shop',
-                walk_mins: 4,
-                name_zh: '全聯福利中心 & 24H 藥妝便利生活圈',
-                name_en: 'PX Mart & 24H Drugstore Convenience Zone',
-                tag_zh: '伴手禮採買 · 24小時生活補給',
-                tag_en: 'Souvenirs & 24H Daily Essentials',
-                desc_zh: '飯店周邊機能極佳，步行數分鐘內即可抵達全聯超市、屈臣氏、康是美與多間便利商店，購買台灣零食茶葉或日常用品最方便。',
-                desc_en: 'Supermarkets, drugstores (Watsons/Cosmed), and convenience stores are all within a 4-minute walk for snacks, tea souvenirs, and essentials.',
-                hours: '08:00 - 23:00 (超商 24H)',
-                map_url: 'https://maps.google.com/?q=全聯福利中心+中山長安店',
-                image_url: ''
-            },
-            {
-                id: 8,
-                category: 'food',
-                walk_mins: 12,
-                name_zh: '阿城鵝肉 吉林總店',
-                name_en: 'A-Cheng Goose (Jilin Main Store)',
-                tag_zh: '米其林必比登推介 · 招牌煙燻鵝肉',
-                tag_en: 'Michelin Bib Gourmand · Smoked Goose',
-                desc_zh: '連續多年榮獲米其林必比登推介，必點鮮嫩多汁的煙燻鵝肉、麻辣血旺與杏鮑菇香腸，晚餐時段建議提前線上抽號碼牌。',
-                desc_en: 'Multi-year Michelin Bib Gourmand honoree famed for juicy smoked goose, spicy duck blood, and king oyster mushroom sausage.',
-                hours: '11:30 - 21:00',
-                map_url: 'https://maps.google.com/?q=阿城鵝肉+吉林店',
-                image_url: ''
-            }
-        ];
+  <!-- 頁尾 -->
+  <footer class="bg-white border-t border-stone-200/80 py-6 px-4 sm:px-6 mt-10">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+      <p>© 2026 喜瑞飯店 Ambience Hotel Taipei. All rights reserved.</p>
+      <button onclick="toggleSetupModal()" class="text-[#B48A5A] hover:underline font-medium">
+        ⚙️ 檢視試算表串接狀態 / 下載 CSV 範本
+      </button>
+    </div>
+  </footer>
 
-        // 介面靜態文字雙語字典
-        const UI_TEXT = {
-            zh: {
-                langToggle: 'English',
-                heroTitle: '喜瑞飯店｜周邊探索指南',
-                heroSubtitle: '精選步行可達的台北在地美食、精品咖啡廳與林蔭藝文散步地圖，為您的旅途獻上最道地的中山區日常。',
-                hotelBase: '出發基準點：喜瑞飯店 Ambience Hotel（台北市中山區長安東路一段 64 號）',
-                searchPlaceholder: '搜尋店名、料理類型或特色標籤（例如：豆漿、豬腳、咖啡、熱炒）...',
-                walkLabel: '步行時間：',
-                walkAll: '全部距離',
-                walk5: '5 分鐘內',
-                walk15: '15 分鐘內',
-                catAll: '全部 All',
-                catFood: '🍜 在地美食 Food',
-                catCafe: '☕ 咖啡甜點 Cafe',
-                catSpot: '🌿 景點散步 Spot',
-                catShop: '🛍️ 生活採買 Shop',
-                walkBadge: (min) => `步行約 ${min} 分鐘`,
-                hoursPrefix: '營業：',
-                navBtn: '開啟 Google 地圖導航',
-                resultCount: (count) => `顯示 ${count} 個精選推薦地點`,
-                emptyTitle: '找不到符合條件的店家',
-                emptyDesc: '請嘗試更換搜尋關鍵字，或放寬步行時間與分類篩選條件。',
-                resetBtn: '重設所有篩選條件',
-                footerNote: '台北市中山區長安東路一段 64 號 · 營業時間可能依店家現場公告調整，出發前建議點擊地圖確認。',
-                adminBtn: '串接 Google 試算表說明 / 測試',
-                catNames: {
-                    food: '在地美食',
-                    cafe: '咖啡甜點',
-                    spot: '景點散步',
-                    shop: '生活採買'
-                }
-            },
-            en: {
-                langToggle: '繁體中文',
-                heroTitle: 'Ambience Hotel｜Neighborhood Guide',
-                heroSubtitle: 'Curated local eateries, specialty cafes, and cultural strolls within walking distance—your insider guide to Zhongshan District.',
-                hotelBase: 'Starting Point: Ambience Hotel (No. 64, Sec. 1, Chang’an E. Rd., Zhongshan Dist., Taipei)',
-                searchPlaceholder: 'Search by name, cuisine, or tag (e.g., Soy Milk, Pork, Coffee, Stir-Fry)...',
-                walkLabel: 'Walk Time:',
-                walkAll: 'All Distances',
-                walk5: 'Within 5 min',
-                walk15: 'Within 15 min',
-                catAll: 'All Spots',
-                catFood: '🍜 Local Food',
-                catCafe: '☕ Cafe & Sweets',
-                catSpot: '🌿 Strolls & Culture',
-                catShop: '🛍️ Essentials & Shop',
-                walkBadge: (min) => `${min} min walk`,
-                hoursPrefix: 'Hours: ',
-                navBtn: 'Open in Google Maps',
-                resultCount: (count) => `Showing ${count} curated recommendation${count === 1 ? '' : 's'}`,
-                emptyTitle: 'No matching places found',
-                emptyDesc: 'Try adjusting your search keywords or resetting the walking distance and category filters.',
-                resetBtn: 'Reset All Filters',
-                footerNote: 'No. 64, Sec. 1, Chang’an E. Rd., Taipei · Opening hours may vary on holidays. Tap "Open in Google Maps" for live directions.',
-                adminBtn: 'Google Sheets Sync Guide / Test',
-                catNames: {
-                    food: 'Local Food',
-                    cafe: 'Cafe & Sweets',
-                    spot: 'Cultural Spot',
-                    shop: 'Essentials'
-                }
-            }
-        };
+  <!-- 試算表狀態與測試彈窗 -->
+  <div id="setupModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-800">Google 試算表資料串接狀態</h3>
+        <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
+      </div>
+      <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+        <p>目前已成功綁定您的 Google 試算表發佈網址。修改試算表後約 <strong>3～5 分鐘</strong>會自動同步至此網頁。</p>
+        <p>若要顯示照片，請確認照片已上傳至 GitHub 專案最外層（檔名與大小寫需與試算表 <code>image_url</code> 欄位完全一致，例如 <code>fuhang.jpg</code>）。</p>
+      </div>
+      <div class="pt-2 flex flex-wrap gap-2">
+        <button onclick="downloadSampleCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
+          📥 下載標準 CSV 範本
+        </button>
+        <button onclick="reloadSheetData()" class="px-3.5 py-2 bg-[#B48A5A] hover:bg-[#9E7649] text-white rounded-lg text-xs font-medium transition">
+          🔄 立即重新抓取試算表
+        </button>
+      </div>
+    </div>
+  </div>
 
-        // 分類對應的微章樣式色彩
-        const CATEGORY_STYLES = {
-            food: 'bg-amber-50 text-amber-800 border-amber-200',
-            cafe: 'bg-stone-100 text-stone-700 border-stone-300',
-            spot: 'bg-indigo-50 text-indigo-800 border-indigo-200',
-            shop: 'bg-emerald-50 text-emerald-800 border-emerald-200'
-        };
+  <script>
+    // =========================================================================
+    // 已綁定您的 Google 試算表 CSV 發佈網址
+    // =========================================================================
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
 
-        /**
-         * 頁面初始化
-         */
-        window.addEventListener('DOMContentLoaded', async () => {
-            if (GOOGLE_SHEET_CSV_URL && GOOGLE_SHEET_CSV_URL.trim() !== '') {
-                await fetchGoogleSheetCSV(GOOGLE_SHEET_CSV_URL.trim());
-            } else {
-                placesData = [...DEFAULT_PLACES_DATA];
-                renderAll();
-            }
-        });
+    // 預設備援資料（當試算表無法連線時顯示）
+    const DEFAULT_PLACES = [
+      {
+        category: "food",
+        walk_mins: 12,
+        name_zh: "阜杭豆漿",
+        name_en: "Fuhang Soy Milk",
+        tag_zh: "米其林必比登 · 經典台式早餐",
+        tag_en: "Michelin Bib Gourmand · Iconic Breakfast",
+        desc_zh: "位於華山市場二樓的排隊名店，必點炭火現烤厚餅夾蛋、香濃鹹豆漿與焦糖甜餅，建議平日十點半後前往避開長龍。",
+        desc_en: "Legendary Taipei breakfast spot on the 2nd floor of Huashan Market, famous for thick oven-baked flatbreads, savory soy milk, and sweet sesame pastries.",
+        hours: "05:30 - 12:30 (週一公休)",
+        map_url: "https://maps.google.com/?q=阜杭豆漿",
+        image_url: "fuhang.jpg"
+      },
+      {
+        category: "cafe",
+        walk_mins: 8,
+        name_zh: "Fika Fika Cafe 伊通公園店",
+        name_en: "Fika Fika Cafe (Yitong Park)",
+        tag_zh: "北歐烘焙冠軍 · 綠意採光咖啡",
+        tag_en: "Nordic Roasting Champion · Sunlit Cafe",
+        desc_zh: "緊鄰伊通公園的北歐風格精品咖啡館，大片落地窗採光極佳，推薦招牌陽光曼巴與手作肉桂捲，享受悠閒午後。",
+        desc_en: "Nordic-style specialty coffee shop facing Yitong Park with floor-to-ceiling windows, famous for award-winning roasts and cinnamon rolls.",
+        hours: "08:00 - 21:00",
+        map_url: "https://maps.google.com/?q=Fika+Fika+Cafe+伊通公園店",
+        image_url: ""
+      },
+      {
+        category: "food",
+        walk_mins: 12,
+        name_zh: "富霸王豬腳極品餐廳",
+        name_en: "Fubawang Pork Knuckle",
+        tag_zh: "四平陽光商圈 · 排隊滷豬腳名店",
+        tag_en: "Siping Market · Famous Braised Pork",
+        desc_zh: "位於四平商圈的超人氣台式美食，油亮軟嫩的腿扣與腿節入口即化，搭配滷肉飯與筍絲最道地，建議避開正餐尖峰。",
+        desc_en: "Iconic local eatery in Siping Shopping District serving melt-in-your-mouth braised pork knuckles, braised pork rice, and bamboo shoots.",
+        hours: "11:00 - 19:30 (週日、一公休)",
+        map_url: "https://maps.google.com/?q=富霸王豬腳極品餐廳",
+        image_url: ""
+      },
+      {
+        category: "food",
+        walk_mins: 2,
+        name_zh: "長安東路一段熱炒一條街（臨洋港生猛活海鮮）",
+        name_en: "Chang'an E. Rd. Stir-Fry Street (Linyanggang)",
+        tag_zh: "飯店轉角即達 · 體驗道地台式夜生活",
+        tag_en: "Steps from Hotel · Authentic Taiwanese Nightlife",
+        desc_zh: "出飯店步行兩分鐘即達台北最負盛名的熱炒街，現撈海鮮與鑊氣十足的快炒料理，適合三五好友體驗台灣道地宵夜文化。",
+        desc_en: "Just two minutes from the hotel lies Taipei's famous stir-fry street, offering fresh seafood and lively Taiwanese late-night dining.",
+        hours: "17:00 - 02:00",
+        map_url: "https://maps.google.com/?q=臨洋港生猛活海鮮+長安店",
+        image_url: ""
+      },
+      {
+        category: "spot",
+        walk_mins: 15,
+        name_zh: "光點台北 珈琲時光",
+        name_en: "SPOT-Taipei & Café Lumière",
+        tag_zh: "中山北路林蔭大道 · 歷史古蹟藝文空間",
+        tag_en: "Zhongshan N. Rd. · Historic Cinema & Cafe",
+        desc_zh: "前身為前美國大使官邸的三級古蹟，純白洋樓融合藝術電影院與庭園咖啡廳，沿著中山北路林蔭大道散步即可抵達。",
+        desc_en: "Housed in the former US Ambassador's Residence, this historic white mansion blends an arthouse cinema with a tranquil garden cafe.",
+        hours: "11:00 - 21:30",
+        map_url: "https://maps.google.com/?q=光點台北",
+        image_url: ""
+      },
+      {
+        category: "food",
+        walk_mins: 5,
+        name_zh: "條通文化日式居酒屋（林森北路六條通）",
+        name_en: "Tiaotong Izakaya District (Linsen N. Rd.)",
+        tag_zh: "百年日式風情 · 職人串燒與深夜食堂",
+        tag_en: "Historic Japanese Quarter · Yakitori & Sake",
+        desc_zh: "承襲日治時期大正町歷史底蘊的巷弄商圈，聚集眾多道地日式居酒屋、燒鳥與昭和風酒吧，夜晚散步別具異國情調。",
+        desc_en: "Steeped in Japanese-era heritage, these atmospheric alleys feature authentic yakitori joints, izakayas, and Showa-style bars.",
+        hours: "18:00 - 01:00",
+        map_url: "https://maps.google.com/?q=林森北路六條通",
+        image_url: ""
+      },
+      {
+        category: "shop",
+        walk_mins: 4,
+        name_zh: "全聯福利中心 & 24H 藥妝便利生活圈",
+        name_en: "PX Mart & 24H Drugstore Convenience Zone",
+        tag_zh: "伴手禮採買 · 24小時生活補給",
+        tag_en: "Souvenirs & 24H Daily Essentials",
+        desc_zh: "飯店周邊機能極佳，步行數分鐘內即可抵達全聯超市、屈臣氏、康是美與多間便利商店，購買台灣零食茶葉或日常用品最方便。",
+        desc_en: "Supermarkets, drugstores (Watsons/Cosmed), and convenience stores are all within a 4-minute walk for snacks, tea souvenirs, and essentials.",
+        hours: "08:00 - 23:00 (超商 24H)",
+        map_url: "https://maps.google.com/?q=全聯福利中心+中山長安店",
+        image_url: ""
+      },
+      {
+        category: "food",
+        walk_mins: 12,
+        name_zh: "阿城鵝肉 吉林總店",
+        name_en: "A-Cheng Goose (Jilin Main Store)",
+        tag_zh: "米其林必比登推介 · 招牌煙燻鵝肉",
+        tag_en: "Michelin Bib Gourmand · Smoked Goose",
+        desc_zh: "連續多年榮獲米其林必比登推介，必點鮮嫩多汁的煙燻鵝肉、麻辣血旺與杏鮑菇香腸，晚餐時段建議提前線上抽號碼牌。",
+        desc_en: "Multi-year Michelin Bib Gourmand honoree famed for juicy smoked goose, spicy duck blood, and king oyster mushroom sausage.",
+        hours: "11:30 - 21:00",
+        map_url: "https://maps.google.com/?q=阿城鵝肉+吉林店",
+        image_url: ""
+      }
+    ];
 
-        /**
-         * 切換中/英雙語
-         */
-        function toggleLanguage() {
-            currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            updateStaticUIText();
-            applyFilters();
+    const CATEGORY_STYLES = {
+      food: { bg: "from-amber-100 to-orange-50", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food" },
+      cafe: { bg: "from-stone-200 to-amber-50", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets" },
+      spot: { bg: "from-emerald-100 to-teal-50", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing" },
+      shop: { bg: "from-sky-100 to-indigo-50", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping" }
+    };
+
+    const I18N = {
+      zh: {
+        originTag: "出發點：台北市中山區長安東路一段64號",
+        title: "喜瑞飯店｜周邊探索指南",
+        subtitle: "精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟與 24H 便利生活圈。",
+        searchPlaceholder: "搜尋店名、料理或特色（例：豬腳、咖啡、熱炒）...",
+        walkAll: "全部距離",
+        walk5: "步行 5 分鐘內",
+        walk15: "步行 15 分鐘內",
+        catAll: "全部推薦",
+        catFood: "🍜 在地美食",
+        catCafe: "☕ 咖啡甜點",
+        catSpot: "🌿 景點散步",
+        catShop: "🛍️ 伴手禮 / 生活",
+        showingCount: "共顯示",
+        placesUnit: "個精選地點",
+        walkMins: "步行約 {m} 分鐘",
+        openMap: "Google 地圖導航",
+        noResults: "找不到符合條件的地點，請嘗試清除篩選條件。",
+        resetBtn: "重設篩選"
+      },
+      en: {
+        originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
+        title: "Ambience Hotel｜Neighborhood Guide",
+        subtitle: "Curated local eats, specialty cafes, historic landmarks, and 24H convenience within walking distance.",
+        searchPlaceholder: "Search name, cuisine, or tag (e.g. Goose, Cafe, Stir-fry)...",
+        walkAll: "All Distances",
+        walk5: "Within 5 mins",
+        walk15: "Within 15 mins",
+        catAll: "All Picks",
+        catFood: "🍜 Local Food",
+        catCafe: "☕ Cafe & Sweets",
+        catSpot: "🌿 Sightseeing",
+        catShop: "🛍️ Shopping",
+        showingCount: "Showing",
+        placesUnit: "curated places",
+        walkMins: "{m} min walk",
+        openMap: "Open in Google Maps",
+        noResults: "No matching places found. Try clearing your filters.",
+        resetBtn: "Reset Filters"
+      }
+    };
+
+    let currentLang = "zh";
+    let currentCategory = "all";
+    let currentWalkFilter = "all";
+    let placesData = [...DEFAULT_PLACES];
+
+    function toggleLanguage() {
+      currentLang = currentLang === "zh" ? "en" : "zh";
+      document.getElementById("langLabel").textContent = currentLang === "zh" ? "English" : "繁體中文";
+      document.getElementById("searchInput").placeholder = I18N[currentLang].searchPlaceholder;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[currentLang][key]) {
+          el.textContent = I18N[currentLang][key];
         }
+      });
+      renderPlaces();
+    }
 
-        /**
-         * 更新介面靜態文字語系
-         */
-        function updateStaticUIText() {
-            const t = UI_TEXT[currentLang];
-            document.getElementById('langLabel').textContent = t.langToggle;
-            document.getElementById('heroTitle').textContent = t.heroTitle;
-            document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
-            document.getElementById('hotelBaseLabel').textContent = t.hotelBase;
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            document.getElementById('walkFilterLabel').textContent = t.walkLabel;
-            document.getElementById('emptyTitle').textContent = t.emptyTitle;
-            document.getElementById('emptyDesc').textContent = t.emptyDesc;
-            document.getElementById('resetBtn').textContent = t.resetBtn;
-            document.getElementById('footerNote').textContent = t.footerNote;
-            document.getElementById('adminBtnText').textContent = t.adminBtn;
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-btn").forEach(btn => {
+        const isActive = btn.getAttribute("data-cat") === cat;
+        btn.className = isActive
+          ? "cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap"
+          : "cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap";
+      });
+      renderPlaces();
+    }
 
-            // 更新 data-i18n 標籤
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) el.textContent = t[key];
-            });
+    function setWalkFilter(mins) {
+      currentWalkFilter = mins;
+      document.querySelectorAll(".walk-btn").forEach(btn => {
+        const isActive = String(btn.getAttribute("data-walk")) === String(mins);
+        btn.className = isActive
+          ? "walk-btn active px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-[#1E293B] text-white transition"
+          : "walk-btn px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap bg-white border border-stone-200 text-slate-600 hover:bg-stone-100 transition";
+      });
+      renderPlaces();
+    }
+
+    function resetFilters() {
+      document.getElementById("searchInput").value = "";
+      setCategory("all");
+      setWalkFilter("all");
+    }
+
+    function renderPlaces() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const grid = document.getElementById("placesGrid");
+      const emptyState = document.getElementById("emptyState");
+
+      const filtered = placesData.filter(item => {
+        const matchCat = currentCategory === "all" || item.category === currentCategory;
+        const matchWalk = currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
+        const searchable = `${item.name_zh} ${item.name_en} ${item.tag_zh} ${item.tag_en} ${item.desc_zh} ${item.desc_en}`.toLowerCase();
+        const matchQuery = !query || searchable.includes(query);
+        return matchCat && matchWalk && matchQuery;
+      });
+
+      document.getElementById("resultCount").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      grid.innerHTML = filtered.map(item => {
+        const style = CATEGORY_STYLES[item.category] || CATEGORY_STYLES.food;
+        const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
+        const subName = currentLang === "zh" ? item.name_en : item.name_zh;
+        const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
+        const desc = currentLang === "zh" ? item.desc_zh : (item.desc_en || item.desc_zh);
+        const catLabel = currentLang === "zh" ? style.labelZh : style.labelEn;
+        const walkText = I18N[currentLang].walkMins.replace("{m}", item.walk_mins || 5);
+        const cleanImgUrl = (item.image_url || "").trim();
+
+        const headerVisual = cleanImgUrl
+          ? `<div class="h-44 w-full relative overflow-hidden bg-gradient-to-br ${style.bg}">
+               <img src="${cleanImgUrl}" alt="${name}" loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+               <div style="display:none;" class="w-full h-full items-center justify-center text-4xl">${style.icon}</div>
+             </div>`
+          : `<div class="h-36 w-full bg-gradient-to-br ${style.bg} flex items-center justify-center text-4xl">
+               <span>${style.icon}</span>
+             </div>`;
+
+        return `
+          <article class="group bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
+            <div class="relative">
+              ${headerVisual}
+              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm">
+                ${catLabel}
+              </span>
+              <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium">
+                🚶 ${walkText}
+              </span>
+            </div>
+
+            <div class="p-5 flex-1 flex flex-col">
+              <div class="mb-2">
+                <h2 class="font-bold text-lg text-slate-900 leading-snug">${name}</h2>
+                ${subName ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
+              </div>
+
+              ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2.5">${tag}</p>` : ""}
+
+              <p class="text-sm text-slate-600 leading-relaxed flex-1">${desc}</p>
+
+              <div class="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
+                <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
+                  ${item.hours ? `🕒 ${item.hours}` : ""}
+                </span>
+                <a href="${item.map_url}" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F6] hover:bg-[#B48A5A] text-slate-800 hover:text-white border border-stone-200 hover:border-[#B48A5A] text-xs font-semibold transition shrink-0">
+                  <span>${I18N[currentLang].openMap}</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function parseCSV(text) {
+      const rows = [];
+      let currentRow = [];
+      let currentCell = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const nextChar = text[i + 1];
+
+        if (char === '"' && inQuotes && nextChar === '"') {
+          currentCell += '"';
+          i++;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          currentRow.push(currentCell.trim());
+          currentCell = "";
+        } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+          if (char === '\r') i++;
+          currentRow.push(currentCell.trim());
+          if (currentRow.some(c => c !== "")) rows.push(currentRow);
+          currentRow = [];
+          currentCell = "";
+        } else {
+          currentCell += char;
         }
+      }
+      if (currentCell !== "" || currentRow.length > 0) {
+        currentRow.push(currentCell.trim());
+        if (currentRow.some(c => c !== "")) rows.push(currentRow);
+      }
+      return rows;
+    }
 
-        /**
-         * 設定分類篩選
-         */
-        function setCategory(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                if (btn.getAttribute('data-cat') === cat) {
-                    btn.className = 'cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-brand-gold text-white shadow-sm';
-                } else {
-                    btn.className = 'cat-btn shrink-0 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all bg-white text-slate-600 border border-brand-stone hover:border-brand-gold';
-                }
-            });
-            applyFilters();
+    async function loadFromGoogleSheet(url) {
+      const badge = document.getElementById("dataSourceBadge");
+      try {
+        // 加上時間戳參數以減少瀏覽器本地快取
+        const fetchUrl = url + (url.includes("?") ? "&" : "?") + "_t=" + Math.floor(Date.now() / 60000);
+        const res = await fetch(fetchUrl);
+        if (!res.ok) throw new Error("Network response was not ok");
+        const csvText = await res.text();
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) throw new Error("CSV has no data rows");
+
+        // 清除可能存在的 BOM 隱藏字元並轉小寫
+        const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").toLowerCase().trim());
+        const parsed = rows.slice(1).map(row => {
+          const obj = {};
+          headers.forEach((h, idx) => {
+            obj[h] = (row[idx] || "").trim();
+          });
+          return obj;
+        }).filter(item => item.name_zh || item.name_en);
+
+        if (parsed.length > 0) {
+          placesData = parsed;
+          badge.textContent = `已同步 Google 試算表 (${parsed.length} 筆)`;
+          badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium";
+          renderPlaces();
         }
+      } catch (err) {
+        console.error("Google Sheet 載入失敗，改用內建資料：", err);
+        badge.textContent = "目前顯示內建備援資料";
+        badge.className = "text-[11px] px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-medium";
+        renderPlaces();
+      }
+    }
 
-        /**
-         * 設定步行距離篩選
-         */
-        function setWalkFilter(maxMin) {
-            currentWalkMax = maxMin;
-            document.querySelectorAll('.walk-btn').forEach(btn => {
-                if (String(btn.getAttribute('data-walk')) === String(maxMin)) {
-                    btn.className = 'walk-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-brand-dark text-white';
-                } else {
-                    btn.className = 'walk-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-medium transition-all text-slate-600 hover:text-brand-dark';
-                }
-            });
-            applyFilters();
-        }
+    function reloadSheetData() {
+      if (GOOGLE_SHEET_CSV_URL) {
+        loadFromGoogleSheet(GOOGLE_SHEET_CSV_URL);
+        toggleSetupModal();
+      }
+    }
 
-        /**
-         * 清除搜尋框
-         */
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearSearchBtn').classList.add('hidden');
-            applyFilters();
-        }
+    function toggleSetupModal() {
+      document.getElementById("setupModal").classList.toggle("hidden");
+    }
 
-        /**
-         * 重設所有篩選器
-         */
-        function resetAllFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearSearchBtn').classList.add('hidden');
-            setCategory('all');
-            setWalkFilter('all');
-        }
+    function downloadSampleCSV() {
+      const headers = ["category", "walk_mins", "name_zh", "name_en", "tag_zh", "tag_en", "desc_zh", "desc_en", "hours", "map_url", "image_url"];
+      const csvLines = [
+        headers.join(","),
+        ...placesData.map(p => headers.map(h => `"${String(p[h] || "").replace(/"/g, '""')}"`).join(","))
+      ];
+      const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "ambience_hotel_guide.csv";
+      link.click();
+    }
 
-        /**
-         * 執行多重條件篩選並渲染卡片
-         */
-        function applyFilters() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            const clearBtn = document.getElementById('clearSearchBtn');
-            if (query.length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-
-            const filtered = placesData.filter(place => {
-                // 1. 分類比對
-                const matchCat = currentCategory === 'all' || place.category === currentCategory;
-                // 2. 步行時間比對
-                const matchWalk = currentWalkMax === 'all' || Number(place.walk_mins) <= Number(currentWalkMax);
-                // 3. 關鍵字比對 (同時比對中英文店名、介紹與特色標籤)
-                let matchQuery = true;
-                if (query) {
-                    const searchableText = [
-                        place.name_zh,
-                        place.name_en,
-                        place.tag_zh,
-                        place.tag_en,
-                        place.desc_zh,
-                        place.desc_en
-                    ].join(' ').toLowerCase();
-                    matchQuery = searchableText.includes(query);
-                }
-
-                return matchCat && matchWalk && matchQuery;
-            });
-
-            renderCards(filtered);
-        }
-
-        /**
-         * 完整重新渲染
-         */
-        function renderAll() {
-            updateStaticUIText();
-            applyFilters();
-        }
-
-        /**
-         * 渲染店家卡片網格
-         */
-        function renderCards(items) {
-            const grid = document.getElementById('cardsGrid');
-            const emptyState = document.getElementById('emptyState');
-            const countText = document.getElementById('resultCountText');
-            const t = UI_TEXT[currentLang];
-
-            countText.textContent = t.resultCount(items.length);
-
-            if (items.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-
-            grid.innerHTML = items.map(item => {
-                const name = currentLang === 'zh' ? item.name_zh : item.name_en;
-                const subName = currentLang === 'zh' ? item.name_en : item.name_zh;
-                const tagText = currentLang === 'zh' ? item.tag_zh : item.tag_en;
-                const desc = currentLang === 'zh' ? item.desc_zh : item.desc_en;
-                const hours = item.hours || (currentLang === 'zh' ? '依店家現場公告' : 'See store hours');
-                const catName = t.catNames[item.category] || item.category;
-                const catStyle = CATEGORY_STYLES[item.category] || 'bg-slate-100 text-slate-700 border-slate-200';
-
-                // 將 " · " 分隔的標籤拆成獨立質感膠囊
-                const tagList = tagText ? tagText.split(/[·|、]/).map(s => s.trim()).filter(Boolean) : [];
-                const tagsHtml = tagList.map(tag => 
-                    `<span class="inline-block bg-brand-cream text-slate-600 border border-brand-stone/80 rounded-md px-2.5 py-1 text-xs font-medium"># ${escapeHtml(tag)}</span>`
-                ).join('');
-
-                return `
-                <article class="group bg-white rounded-2xl border border-brand-stone p-5 sm:p-6 shadow-sm hover:shadow-md hover:border-brand-gold/60 transition-all duration-300 flex flex-col justify-between">
-                    <div>
-                        <!-- 頂部標籤列：分類徽章 + 步行時間徽章 -->
-                        <div class="flex items-center justify-between gap-2 mb-3.5">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold border ${catStyle}">
-                                ${escapeHtml(catName)}
-                            </span>
-                            <span class="inline-flex items-center space-x-1 bg-brand-goldBg text-brand-dark px-3 py-1 rounded-full text-xs font-semibold">
-                                <svg class="w-3.5 h-3.5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                                </svg>
-                                <span>${t.walkBadge(item.walk_mins)}</span>
-                            </span>
-                        </div>
-
-                        <!-- 店名主標題與雙語副標 -->
-                        <h2 class="text-lg sm:text-xl font-bold text-brand-dark group-hover:text-brand-gold transition-colors leading-snug">
-                            ${escapeHtml(name)}
-                        </h2>
-                        <p class="text-xs text-slate-400 font-medium mt-0.5 mb-3">
-                            ${escapeHtml(subName)}
-                        </p>
-
-                        <!-- 營業時間 -->
-                        <div class="flex items-center space-x-1.5 text-xs text-slate-500 mb-3.5 pb-3 border-b border-brand-stone/60">
-                            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>${t.hoursPrefix}${escapeHtml(hours)}</span>
-                        </div>
-
-                        <!-- 一句話推薦亮點 -->
-                        <p class="text-sm text-slate-600 leading-relaxed mb-4">
-                            ${escapeHtml(desc)}
-                        </p>
-                    </div>
-
-                    <div>
-                        <!-- 推薦必點標籤 -->
-                        <div class="flex flex-wrap gap-1.5 mb-5">
-                            ${tagsHtml}
-                        </div>
-
-                        <!-- 顯眼的開啟 Google 地圖導航按鈕 (大觸控熱區) -->
-                        <a href="${escapeHtml(item.map_url)}" target="_blank" rel="noopener noreferrer"
-                            class="w-full inline-flex items-center justify-center space-x-2 bg-brand-dark hover:bg-brand-gold active:scale-[0.99] text-white font-medium text-sm py-3 px-4 rounded-xl transition-all shadow-sm">
-                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span>${t.navBtn}</span>
-                            <svg class="w-3.5 h-3.5 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                            </svg>
-                        </a>
-                    </div>
-                </article>
-                `;
-            }).join('');
-        }
-
-        /**
-         * ==========================================
-         * Google Sheets CSV 動態串接與解析引擎
-         * ==========================================
-         */
-        async function fetchGoogleSheetCSV(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP 錯誤狀態碼: ${response.status}`);
-                const csvText = await response.text();
-                const parsedItems = parseCSVToPlaces(csvText);
-
-                if (parsedItems.length === 0) {
-                    throw new Error('CSV 檔案中未解析到有效的店家資料列，請確認欄位標題是否與範本相符。');
-                }
-
-                placesData = parsedItems;
-                updateDataSourceBadge(true, `已連線 Google 試算表（共 ${parsedItems.length} 筆）`);
-                renderAll();
-                return { success: true, count: parsedItems.length };
-            } catch (error) {
-                console.error('載入 Google Sheets CSV 失敗:', error);
-                // 若載入失敗，安全降級回內建示範資料，確保房客畫面永不空白
-                if (placesData.length === 0) {
-                    placesData = [...DEFAULT_PLACES_DATA];
-                    renderAll();
-                }
-                return { success: false, message: error.message };
-            }
-        }
-
-        /**
-         * 輕量級 RFC-4180 相容 CSV 解析器（支援欄位內含逗號、換行與雙引號跳脫）
-         */
-        function parseCSVToPlaces(csvText) {
-            const rows = [];
-            let currentRow = [];
-            let currentVal = '';
-            let insideQuotes = false;
-
-            // 移除可能存在的 UTF-8 BOM
-            const cleanText = csvText.replace(/^\uFEFF/, '');
-
-            for (let i = 0; i < cleanText.length; i++) {
-                const char = cleanText[i];
-                const nextChar = cleanText[i + 1];
-
-                if (char === '"') {
-                    if (insideQuotes && nextChar === '"') {
-                        currentVal += '"';
-                        i++; // 跳過跳脫引號
-                    } else {
-                        insideQuotes = !insideQuotes;
-                    }
-                } else if (char === ',' && !insideQuotes) {
-                    currentRow.push(currentVal.trim());
-                    currentVal = '';
-                } else if ((char === '\r' || char === '\n') && !insideQuotes) {
-                    if (char === '\r' && nextChar === '\n') i++;
-                    currentRow.push(currentVal.trim());
-                    if (currentRow.some(cell => cell !== '')) {
-                        rows.push(currentRow);
-                    }
-                    currentRow = [];
-                    currentVal = '';
-                } else {
-                    currentVal += char;
-                }
-            }
-            if (currentVal !== '' || currentRow.length > 0) {
-                currentRow.push(currentVal.trim());
-                if (currentRow.some(cell => cell !== '')) rows.push(currentRow);
-            }
-
-            if (rows.length < 2) return [];
-
-            const headers = rows[0].map(h => h.trim());
-            const items = [];
-
-            for (let r = 1; r < rows.length; r++) {
-                const rowObj = {};
-                headers.forEach((h, idx) => {
-                    rowObj[h] = rows[r][idx] || '';
-                });
-
-                // 確保至少有中文或英文店名才列入
-                if (!rowObj.name_zh && !rowObj.name_en) continue;
-
-                items.push({
-                    id: r,
-                    category: rowObj.category || 'food',
-                    walk_mins: parseInt(rowObj.walk_mins || rowObj.walkMinutes, 10) || 5,
-                    name_zh: rowObj.name_zh || rowObj.name_en,
-                    name_en: rowObj.name_en || rowObj.name_zh,
-                    tag_zh: rowObj.tag_zh || '',
-                    tag_en: rowObj.tag_en || rowObj.tag_zh || '',
-                    desc_zh: rowObj.desc_zh || rowObj.highlight_zh || '',
-                    desc_en: rowObj.desc_en || rowObj.highlight_en || rowObj.desc_zh || '',
-                    hours: rowObj.hours || rowObj.hours_zh || '',
-                    map_url: rowObj.map_url || rowObj.mapUrl || `https://maps.google.com/?q=${encodeURIComponent(rowObj.name_zh || rowObj.name_en)}`,
-                    image_url: rowObj.image_url || ''
-                });
-            }
-
-            return items;
-        }
-
-        /**
-         * 更新右上角資料來源指示徽章
-         */
-        function updateDataSourceBadge(isLiveSheet, text) {
-            const badge = document.getElementById('dataSourceBadge');
-            const label = document.getElementById('dataSourceLabel');
-            const dot = badge.querySelector('span:first-child');
-            label.textContent = text;
-            if (isLiveSheet) {
-                dot.className = 'w-2 h-2 rounded-full bg-brand-gold animate-pulse';
-            } else {
-                dot.className = 'w-2 h-2 rounded-full bg-emerald-500';
-            }
-        }
-
-        /**
-         * 彈窗互動控制
-         */
-        function openAdminModal() {
-            const modal = document.getElementById('adminModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
-
-        function closeAdminModal() {
-            const modal = document.getElementById('adminModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        async function loadFromInputUrl() {
-            const urlInput = document.getElementById('csvUrlInput').value.trim();
-            const statusMsg = document.getElementById('modalStatusMsg');
-            
-            if (!urlInput) {
-                statusMsg.textContent = '請先貼上 Google 試算表發佈的 CSV 網址。';
-                statusMsg.className = 'text-xs text-rose-600 block mt-1';
-                return;
-            }
-
-            statusMsg.textContent = '正在連線讀取試算表資料中...';
-            statusMsg.className = 'text-xs text-slate-600 block mt-1';
-
-            const res = await fetchGoogleSheetCSV(urlInput);
-            if (res.success) {
-                statusMsg.textContent = `✅ 成功載入 ${res.count} 筆店家資料！畫面已即時更新。`;
-                statusMsg.className = 'text-xs text-emerald-600 font-medium block mt-1';
-                setTimeout(() => closeAdminModal(), 1200);
-            } else {
-                statusMsg.textContent = `❌ 載入失敗：${res.message}（請確認試算表已「發佈到網路」且格式選為 CSV）`;
-                statusMsg.className = 'text-xs text-rose-600 block mt-1';
-            }
-        }
-
-        function restoreDefaultData() {
-            placesData = [...DEFAULT_PLACES_DATA];
-            updateDataSourceBadge(false, '資料來源：喜瑞飯店精選資料庫');
-            document.getElementById('modalStatusMsg').classList.add('hidden');
-            renderAll();
-            closeAdminModal();
-        }
-
-        /**
-         * 下載標準 Google 試算表欄位範本 CSV (含 UTF-8 BOM 確保 Excel 開啟不亂碼)
-         */
-        function downloadSampleCSV() {
-            const headers = [
-                'category', 'walk_mins', 'name_zh', 'name_en',
-                'tag_zh', 'tag_en', 'desc_zh', 'desc_en',
-                'hours', 'map_url', 'image_url'
-            ];
-
-            const sampleRows = DEFAULT_PLACES_DATA.map(item => [
-                item.category,
-                item.walk_mins,
-                item.name_zh,
-                item.name_en,
-                item.tag_zh,
-                item.tag_en,
-                item.desc_zh,
-                item.desc_en,
-                item.hours,
-                item.map_url,
-                item.image_url || ''
-            ]);
-
-            const csvContent = '\uFEFF' + [headers, ...sampleRows]
-                .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-                .join('\n');
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'ambience_hotel_guide.csv';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        /**
-         * XSS 防護跳脫函式
-         */
-        function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-    </script>
+    // 啟動初始化
+    renderPlaces();
+    if (GOOGLE_SHEET_CSV_URL) {
+      loadFromGoogleSheet(GOOGLE_SHEET_CSV_URL);
+    }
+  </script>
 </body>
 </html>
