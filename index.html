@@ -85,12 +85,13 @@
     <div class="flex items-center justify-between mb-4">
       <p class="text-xs sm:text-sm text-slate-500">
         <span data-i18n="showingCount">共顯示</span> <strong id="resultCount" class="text-slate-800">0</strong> <span data-i18n="placesUnit">個精選地點</span>
+        <span class="hidden sm:inline text-slate-400 ml-1" data-i18n="clickTip">（點擊卡片可檢視照片與詳細介紹）</span>
       </p>
       <span id="dataSourceBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-medium">正在載入 Google 試算表...</span>
     </div>
 
     <!-- 卡片網格 -->
-    <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <div id="placesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
     <!-- 無結果提示 -->
     <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-stone-200/80">
@@ -109,8 +110,50 @@
     </div>
   </footer>
 
+  <!-- 點擊卡片跳出的「店家詳情與實景照片視窗」 -->
+  <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 animate-[fadeIn_0.15s_ease-out]">
+      <!-- 彈窗頂部圖片區 -->
+      <div id="modalImageContainer" class="relative bg-stone-100">
+        <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
+        <div id="modalNoImage" class="h-36 w-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50/60 text-slate-400">
+          <span id="modalFallbackIcon" class="text-4xl mb-1.5">🍜</span>
+          <span class="text-xs" data-i18n="noPhotoText">尚無實景照片</span>
+        </div>
+        <button onclick="closePlaceModal()" aria-label="關閉" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-sm font-bold transition shadow">
+          ✕
+        </button>
+        <div class="absolute bottom-3 left-3 flex items-center gap-2">
+          <span id="modalCatBadge" class="px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm"></span>
+          <span id="modalWalkBadge" class="px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium shadow-sm"></span>
+        </div>
+      </div>
+
+      <!-- 彈窗文字介紹區 -->
+      <div class="p-6 space-y-3">
+        <div>
+          <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
+          <p id="modalSubTitle" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+
+        <p id="modalTag" class="text-xs font-semibold text-[#B48A5A]"></p>
+
+        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed"></p>
+
+        <div class="pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
+          <span id="modalHours" class="text-xs text-slate-500"></span>
+          <a id="modalMapBtn" href="#" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#B48A5A] hover:bg-[#9E7649] text-white text-xs font-semibold transition shadow-sm shrink-0">
+            <span data-i18n="openMap">Google 地圖導航</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 試算表狀態與測試彈窗 -->
-  <div id="setupModal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+  <div id="setupModal" onclick="if(event.target === this) toggleSetupModal()" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
       <div class="flex items-center justify-between">
         <h3 class="font-bold text-base text-slate-800">Google 試算表資料串接狀態</h3>
@@ -118,7 +161,7 @@
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
         <p>目前已成功綁定您的 Google 試算表發佈網址。修改試算表後約 <strong>3～5 分鐘</strong>會自動同步至此網頁。</p>
-        <p>若要顯示照片，請確認照片已上傳至 GitHub 專案最外層（檔名與大小寫需與試算表 <code>image_url</code> 欄位完全一致，例如 <code>fuhang.jpg</code>）。</p>
+        <p>卡片列表維持簡潔文字排版，點擊任一卡片即可跳出視窗顯示試算表 <code>image_url</code> 欄位設定的照片（例如 <code>fuhang.jpg</code>）。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadSampleCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
@@ -137,7 +180,7 @@
     // =========================================================================
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
 
-    // 預設備援資料（當試算表無法連線時顯示）
+    // 預設備援資料
     const DEFAULT_PLACES = [
       {
         category: "food",
@@ -246,10 +289,10 @@
     ];
 
     const CATEGORY_STYLES = {
-      food: { bg: "from-amber-100 to-orange-50", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food" },
-      cafe: { bg: "from-stone-200 to-amber-50", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets" },
-      spot: { bg: "from-emerald-100 to-teal-50", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing" },
-      shop: { bg: "from-sky-100 to-indigo-50", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping" }
+      food: { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food" },
+      cafe: { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets" },
+      spot: { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing" },
+      shop: { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping" }
     };
 
     const I18N = {
@@ -268,8 +311,11 @@
         catShop: "🛍️ 伴手禮 / 生活",
         showingCount: "共顯示",
         placesUnit: "個精選地點",
+        clickTip: "（點擊卡片可檢視照片與詳細介紹）",
         walkMins: "步行約 {m} 分鐘",
         openMap: "Google 地圖導航",
+        viewPhoto: "查看照片",
+        noPhotoText: "尚無實景照片",
         noResults: "找不到符合條件的地點，請嘗試清除篩選條件。",
         resetBtn: "重設篩選"
       },
@@ -288,8 +334,11 @@
         catShop: "🛍️ Shopping",
         showingCount: "Showing",
         placesUnit: "curated places",
+        clickTip: "(Tap a card for photos & details)",
         walkMins: "{m} min walk",
         openMap: "Open in Google Maps",
+        viewPhoto: "Photo",
+        noPhotoText: "No photo available",
         noResults: "No matching places found. Try clearing your filters.",
         resetBtn: "Reset Filters"
       }
@@ -299,6 +348,7 @@
     let currentCategory = "all";
     let currentWalkFilter = "all";
     let placesData = [...DEFAULT_PLACES];
+    let currentFilteredPlaces = [];
 
     function toggleLanguage() {
       currentLang = currentLang === "zh" ? "en" : "zh";
@@ -347,7 +397,7 @@
       const grid = document.getElementById("placesGrid");
       const emptyState = document.getElementById("emptyState");
 
-      const filtered = placesData.filter(item => {
+      currentFilteredPlaces = placesData.filter(item => {
         const matchCat = currentCategory === "all" || item.category === currentCategory;
         const matchWalk = currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
         const searchable = `${item.name_zh} ${item.name_en} ${item.tag_zh} ${item.tag_en} ${item.desc_zh} ${item.desc_en}`.toLowerCase();
@@ -355,16 +405,16 @@
         return matchCat && matchWalk && matchQuery;
       });
 
-      document.getElementById("resultCount").textContent = filtered.length;
+      document.getElementById("resultCount").textContent = currentFilteredPlaces.length;
 
-      if (filtered.length === 0) {
+      if (currentFilteredPlaces.length === 0) {
         grid.innerHTML = "";
         emptyState.classList.remove("hidden");
         return;
       }
 
       emptyState.classList.add("hidden");
-      grid.innerHTML = filtered.map(item => {
+      grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
         const style = CATEGORY_STYLES[item.category] || CATEGORY_STYLES.food;
         const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
         const subName = currentLang === "zh" ? item.name_en : item.name_zh;
@@ -372,56 +422,110 @@
         const desc = currentLang === "zh" ? item.desc_zh : (item.desc_en || item.desc_zh);
         const catLabel = currentLang === "zh" ? style.labelZh : style.labelEn;
         const walkText = I18N[currentLang].walkMins.replace("{m}", item.walk_mins || 5);
-        const cleanImgUrl = (item.image_url || "").trim();
-
-        const headerVisual = cleanImgUrl
-          ? `<div class="h-44 w-full relative overflow-hidden bg-gradient-to-br ${style.bg}">
-               <img src="${cleanImgUrl}" alt="${name}" loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                    class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-               <div style="display:none;" class="w-full h-full items-center justify-center text-4xl">${style.icon}</div>
-             </div>`
-          : `<div class="h-36 w-full bg-gradient-to-br ${style.bg} flex items-center justify-center text-4xl">
-               <span>${style.icon}</span>
-             </div>`;
+        const hasPhoto = Boolean((item.image_url || "").trim());
 
         return `
-          <article class="group bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
-            <div class="relative">
-              ${headerVisual}
-              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-xs font-semibold text-slate-700 shadow-sm">
-                ${catLabel}
+          <article onclick="openPlaceModal(${idx})"
+                   class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] p-5 shadow-sm hover:shadow-md transition flex flex-col">
+            <!-- 頂部標籤列（取代原本大圖區） -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
+                <span>${style.icon}</span>
+                <span>${catLabel}</span>
               </span>
-              <span class="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#1E293B]/90 text-white text-xs font-medium">
-                🚶 ${walkText}
-              </span>
+              <div class="flex items-center gap-1.5">
+                ${hasPhoto ? `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#FAF9F6] border border-stone-200 text-[#B48A5A] text-[11px] font-medium" title="點擊檢視實景照片">📷 ${I18N[currentLang].viewPhoto}</span>` : ""}
+                <span class="px-2.5 py-1 rounded-lg bg-[#1E293B] text-white text-xs font-medium">
+                  🚶 ${walkText}
+                </span>
+              </div>
             </div>
 
-            <div class="p-5 flex-1 flex flex-col">
-              <div class="mb-2">
-                <h2 class="font-bold text-lg text-slate-900 leading-snug">${name}</h2>
-                ${subName ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
-              </div>
+            <!-- 店名與副標題 -->
+            <div class="mb-2">
+              <h2 class="font-bold text-lg text-slate-900 group-hover:text-[#B48A5A] transition leading-snug">${name}</h2>
+              ${subName ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
+            </div>
 
-              ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2.5">${tag}</p>` : ""}
+            ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2">${tag}</p>` : ""}
 
-              <p class="text-sm text-slate-600 leading-relaxed flex-1">${desc}</p>
+            <p class="text-sm text-slate-600 leading-relaxed flex-1 line-clamp-3">${desc}</p>
 
-              <div class="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
-                <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
-                  ${item.hours ? `🕒 ${item.hours}` : ""}
-                </span>
-                <a href="${item.map_url}" target="_blank" rel="noopener noreferrer"
-                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F6] hover:bg-[#B48A5A] text-slate-800 hover:text-white border border-stone-200 hover:border-[#B48A5A] text-xs font-semibold transition shrink-0">
-                  <span>${I18N[currentLang].openMap}</span>
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                </a>
-              </div>
+            <!-- 底部營業時間與導航按鈕 -->
+            <div class="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
+              <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
+                ${item.hours ? `🕒 ${item.hours}` : ""}
+              </span>
+              <a href="${item.map_url}" target="_blank" rel="noopener noreferrer"
+                 onclick="event.stopPropagation()"
+                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F6] hover:bg-[#B48A5A] text-slate-800 hover:text-white border border-stone-200 hover:border-[#B48A5A] text-xs font-semibold transition shrink-0">
+                <span>${I18N[currentLang].openMap}</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
             </div>
           </article>
         `;
       }).join("");
     }
+
+    // 開啟點擊卡片後的詳情與圖片視窗
+    function openPlaceModal(idx) {
+      const item = currentFilteredPlaces[idx];
+      if (!item) return;
+
+      const style = CATEGORY_STYLES[item.category] || CATEGORY_STYLES.food;
+      const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
+      const subName = currentLang === "zh" ? item.name_en : item.name_zh;
+      const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
+      const desc = currentLang === "zh" ? item.desc_zh : (item.desc_en || item.desc_zh);
+      const catLabel = currentLang === "zh" ? style.labelZh : style.labelEn;
+      const walkText = I18N[currentLang].walkMins.replace("{m}", item.walk_mins || 5);
+      const cleanImgUrl = (item.image_url || "").trim();
+
+      document.getElementById("modalTitle").textContent = name;
+      document.getElementById("modalSubTitle").textContent = subName || "";
+      document.getElementById("modalTag").textContent = tag || "";
+      document.getElementById("modalDesc").textContent = desc || "";
+      document.getElementById("modalHours").textContent = item.hours ? `🕒 ${item.hours}` : "";
+      document.getElementById("modalMapBtn").href = item.map_url || "#";
+      document.getElementById("modalCatBadge").textContent = `${style.icon} ${catLabel}`;
+      document.getElementById("modalWalkBadge").textContent = `🚶 ${walkText}`;
+      document.getElementById("modalFallbackIcon").textContent = style.icon;
+
+      const imgEl = document.getElementById("modalImage");
+      const noImgEl = document.getElementById("modalNoImage");
+
+      if (cleanImgUrl) {
+        imgEl.onload = () => {
+          imgEl.classList.remove("hidden");
+          noImgEl.classList.add("hidden");
+        };
+        imgEl.onerror = () => {
+          imgEl.classList.add("hidden");
+          noImgEl.classList.remove("hidden");
+        };
+        imgEl.src = cleanImgUrl;
+        imgEl.alt = name;
+      } else {
+        imgEl.src = "";
+        imgEl.classList.add("hidden");
+        noImgEl.classList.remove("hidden");
+      }
+
+      document.getElementById("placeModal").classList.remove("hidden");
+    }
+
+    function closePlaceModal() {
+      document.getElementById("placeModal").classList.add("hidden");
+    }
+
+    // 支援按 ESC 鍵關閉彈窗
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closePlaceModal();
+        document.getElementById("setupModal").classList.add("hidden");
+      }
+    });
 
     function parseCSV(text) {
       const rows = [];
@@ -461,7 +565,6 @@
     async function loadFromGoogleSheet(url) {
       const badge = document.getElementById("dataSourceBadge");
       try {
-        // 加上時間戳參數以減少瀏覽器本地快取
         const fetchUrl = url + (url.includes("?") ? "&" : "?") + "_t=" + Math.floor(Date.now() / 60000);
         const res = await fetch(fetchUrl);
         if (!res.ok) throw new Error("Network response was not ok");
@@ -469,7 +572,6 @@
         const rows = parseCSV(csvText);
         if (rows.length < 2) throw new Error("CSV has no data rows");
 
-        // 清除可能存在的 BOM 隱藏字元並轉小寫
         const headers = rows[0].map(h => h.replace(/^\uFEFF/, "").toLowerCase().trim());
         const parsed = rows.slice(1).map(row => {
           const obj = {};
