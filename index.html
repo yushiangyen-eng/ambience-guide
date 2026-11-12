@@ -7,10 +7,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
       background-color: #FAF9F6;
       color: #1E293B;
     }
@@ -42,11 +42,16 @@
         </p>
       </div>
 
-      <!-- 語系切換按鈕 -->
-      <div class="self-start sm:self-center">
-        <button id="langToggle" onclick="toggleLanguage()" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-sm font-medium transition flex items-center gap-2">
-          <svg class="w-4 h-4 text-[#E6C79C]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
-          <span id="langLabel">English</span>
+      <!-- 三語切換按鈕組（繁中 / EN / 日本語） -->
+      <div class="self-start sm:self-center inline-flex rounded-xl bg-white/10 p-1 border border-white/15">
+        <button onclick="setLanguage('zh')" data-lang="zh" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition">
+          繁中
+        </button>
+        <button onclick="setLanguage('en')" data-lang="en" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
+          EN
+        </button>
+        <button onclick="setLanguage('ja')" data-lang="ja" class="lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition">
+          日本語
         </button>
       </div>
     </div>
@@ -69,7 +74,7 @@
         </div>
       </div>
 
-      <!-- 分類標籤（已加入 bar 微醺酒吧） -->
+      <!-- 分類標籤 -->
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
         <button onclick="setCategory('all')" data-cat="all" class="cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap" data-i18n="catAll">全部推薦</button>
         <button onclick="setCategory('food')" data-cat="food" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catFood">🍜 在地美食</button>
@@ -106,7 +111,7 @@
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
       <p>© 2026 喜瑞飯店 Ambience Hotel Taipei. All rights reserved.</p>
       <button onclick="toggleSetupModal()" class="text-[#B48A5A] hover:underline font-medium">
-        ⚙️ 檢視試算表串接狀態 / 下載 CSV 範本
+        ⚙️ 檢視試算表串接狀態 / 下載三語 CSV 範本
       </button>
     </div>
   </footer>
@@ -114,7 +119,6 @@
   <!-- 點擊卡片跳出的「店家詳情與實景照片視窗」 -->
   <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
-      <!-- 彈窗頂部圖片區 -->
       <div id="modalImageContainer" class="relative bg-stone-100">
         <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
         <div id="modalNoImage" class="h-36 w-full flex flex-col items-center justify-center bg-gradient-to-br from-stone-100 to-amber-50/60 text-slate-400">
@@ -130,7 +134,6 @@
         </div>
       </div>
 
-      <!-- 彈窗文字介紹區 -->
       <div class="p-6 space-y-3">
         <div>
           <h3 id="modalTitle" class="text-xl font-bold text-slate-900 leading-snug"></h3>
@@ -157,16 +160,16 @@
   <div id="setupModal" onclick="if(event.target === this) toggleSetupModal()" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl border border-stone-200 space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-800">Google 試算表資料串接狀態</h3>
+        <h3 class="font-bold text-base text-slate-800">Google 試算表三語資料串接狀態</h3>
         <button onclick="toggleSetupModal()" class="text-slate-400 hover:text-slate-600 text-lg font-bold">✕</button>
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
-        <p>目前已成功綁定您的 Google 試算表發佈網址。修改試算表後約 <strong>3～5 分鐘</strong>會自動同步至此網頁。</p>
-        <p>分類代碼（<code>category</code>）：<code>food</code>（美食）、<code>cafe</code>（咖啡）、<code>bar</code>（酒吧）、<code>spot</code>（景點）、<code>shop</code>（生活採買）。</p>
+        <p>網頁已支援 <strong>繁體中文 / English / 日本語</strong> 三語切換。</p>
+        <p>在您的 Google 試算表最右側新增 <code>name_ja</code>、<code>tag_ja</code>、<code>desc_ja</code> 三欄即可顯示日文介紹（若暫未填寫日文欄位，系統會自動顯示中文店名與英文備援，不會留白）。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadSampleCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
-          📥 下載標準 CSV 範本
+          📥 下載三語標準 CSV 範本
         </button>
         <button onclick="reloadSheetData()" class="px-3.5 py-2 bg-[#B48A5A] hover:bg-[#9E7649] text-white rounded-lg text-xs font-medium transition">
           🔄 立即重新抓取試算表
@@ -181,17 +184,20 @@
     // =========================================================================
     const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSWlyzIGNyylZRVgFo_33AIShQXGJngkbN7MqkbwlWk-X5jsKiqa81A73jttrRIETcxs1tzPnyjVvxM/pub?gid=0&single=true&output=csv";
 
-    // 預設備援資料
+    // 預設備援資料（含日文欄位）
     const DEFAULT_PLACES = [
       {
         category: "food",
         walk_mins: 12,
         name_zh: "阜杭豆漿",
         name_en: "Fuhang Soy Milk",
+        name_ja: "阜杭豆漿（フーハンドウジャン）",
         tag_zh: "米其林必比登 · 經典台式早餐",
         tag_en: "Michelin Bib Gourmand · Iconic Breakfast",
+        tag_ja: "ミシュランビブグルマン・定番台湾朝ごはん",
         desc_zh: "位於華山市場二樓的排隊名店，必點炭火現烤厚餅夾蛋、香濃鹹豆漿與焦糖甜餅，建議平日十點半後前往避開長龍。",
         desc_en: "Legendary Taipei breakfast spot on the 2nd floor of Huashan Market, famous for thick oven-baked flatbreads, savory soy milk, and sweet sesame pastries.",
+        desc_ja: "華山市場2階にある行列のできる人気朝食店。釜焼きの厚餅夾蛋（卵焼きパン）と濃厚な鹹豆漿（塩味豆乳スープ）は必食です。",
         hours: "05:30 - 12:30 (週一公休)",
         map_url: "https://maps.google.com/?q=阜杭豆漿",
         image_url: "fuhang.jpg"
@@ -201,10 +207,13 @@
         walk_mins: 8,
         name_zh: "Fika Fika Cafe 伊通公園店",
         name_en: "Fika Fika Cafe (Yitong Park)",
+        name_ja: "Fika Fika Cafe 伊通公園店",
         tag_zh: "北歐烘焙冠軍 · 綠意採光咖啡",
         tag_en: "Nordic Roasting Champion · Sunlit Cafe",
+        tag_ja: "北欧焙煎チャンピオン・公園沿いの開放的カフェ",
         desc_zh: "緊鄰伊通公園的北歐風格精品咖啡館，大片落地窗採光極佳，推薦招牌陽光曼巴與手作肉桂捲，享受悠閒午後。",
         desc_en: "Nordic-style specialty coffee shop facing Yitong Park with floor-to-ceiling windows, famous for award-winning roasts and cinnamon rolls.",
+        desc_ja: "伊通公園の目の前にある北欧スタイルのスペシャルティコーヒー店。大きな窓から光が差し込む空間で世界チャンピオンの焙煎コーヒーを楽しめます。",
         hours: "08:00 - 21:00",
         map_url: "https://maps.google.com/?q=Fika+Fika+Cafe+伊通公園店",
         image_url: ""
@@ -214,100 +223,25 @@
         walk_mins: 6,
         name_zh: "Bar Trench Taipei（條通經典日式調酒）",
         name_en: "Bar Trench Taipei",
+        name_ja: "Bar Trench Taipei（バー・トレンチ台北）",
         tag_zh: "東京名店分店 · 職人藥草系經典調酒",
         tag_en: "Tokyo Originated · Herbal & Classic Cocktails",
+        tag_ja: "東京恵比寿の名店・本格ボタニカルカクテル",
         desc_zh: "源自東京惠比壽的知名日式酒吧，隱身林森條通巷弄中，以細膩冰雕技術與苦艾酒、藥草系經典調酒聞名，氛圍沉穩迷人。",
         desc_en: "An acclaimed Japanese cocktail bar originating from Ebisu, Tokyo, tucked in the Tiaotong alleys and famed for hand-carved ice and herbal classics.",
+        desc_ja: "東京・恵比寿の名店の台北支店。林森北路の路地裏に佇み、繊細な氷の彫刻技術とハーブ・アブサンを使ったクラシックカクテルが魅力です。",
         hours: "19:00 - 02:00 (週日公休)",
         map_url: "https://maps.google.com/?q=Bar+Trench+Taipei",
-        image_url: ""
-      },
-      {
-        category: "bar",
-        walk_mins: 7,
-        name_zh: "菱玖洋服 Le Kief（復古西裝店 Speakeasy）",
-        name_en: "Le Kief",
-        tag_zh: "神秘電話亭機關 · 亞洲五十大酒吧團隊",
-        tag_en: "Secret Speakeasy · Asia's 50 Best Team",
-        desc_zh: "外觀是質感英倫手工西裝店，按對老式電話密碼才會開啟暗門進入低調奢華的調酒空間，結合台灣茶與在地食材打造創意特調。",
-        desc_en: "Disguised as a bespoke tailor shop, dial the vintage phone code to enter this plush speakeasy serving creative cocktails infused with Taiwanese tea.",
-        hours: "19:00 - 02:00 (週五、六至 03:00)",
-        map_url: "https://maps.google.com/?q=Le+Kief+菱玖洋服",
-        image_url: ""
-      },
-      {
-        category: "food",
-        walk_mins: 12,
-        name_zh: "富霸王豬腳極品餐廳",
-        name_en: "Fubawang Pork Knuckle",
-        tag_zh: "四平陽光商圈 · 排隊滷豬腳名店",
-        tag_en: "Siping Market · Famous Braised Pork",
-        desc_zh: "位於四平商圈的超人氣台式美食，油亮軟嫩的腿扣與腿節入口即化，搭配滷肉飯與筍絲最道地，建議避開正餐尖峰。",
-        desc_en: "Iconic local eatery in Siping Shopping District serving melt-in-your-mouth braised pork knuckles, braised pork rice, and bamboo shoots.",
-        hours: "11:00 - 19:30 (週日、一公休)",
-        map_url: "https://maps.google.com/?q=富霸王豬腳極品餐廳",
-        image_url: ""
-      },
-      {
-        category: "food",
-        walk_mins: 2,
-        name_zh: "長安東路一段熱炒一條街（臨洋港生猛活海鮮）",
-        name_en: "Chang'an E. Rd. Stir-Fry Street (Linyanggang)",
-        tag_zh: "飯店轉角即達 · 體驗道地台式夜生活",
-        tag_en: "Steps from Hotel · Authentic Taiwanese Nightlife",
-        desc_zh: "出飯店步行兩分鐘即達台北最負盛名的熱炒街，現撈海鮮與鑊氣十足的快炒料理，適合三五好友體驗台灣道地宵夜文化。",
-        desc_en: "Just two minutes from the hotel lies Taipei's famous stir-fry street, offering fresh seafood and lively Taiwanese late-night dining.",
-        hours: "17:00 - 02:00",
-        map_url: "https://maps.google.com/?q=臨洋港生猛活海鮮+長安店",
-        image_url: ""
-      },
-      {
-        category: "spot",
-        walk_mins: 15,
-        name_zh: "光點台北 珈琲時光",
-        name_en: "SPOT-Taipei & Café Lumière",
-        tag_zh: "中山北路林蔭大道 · 歷史古蹟藝文空間",
-        tag_en: "Zhongshan N. Rd. · Historic Cinema & Cafe",
-        desc_zh: "前身為前美國大使官邸的三級古蹟，純白洋樓融合藝術電影院與庭園咖啡廳，沿著中山北路林蔭大道散步即可抵達。",
-        desc_en: "Housed in the former US Ambassador's Residence, this historic white mansion blends an arthouse cinema with a tranquil garden cafe.",
-        hours: "11:00 - 21:30",
-        map_url: "https://maps.google.com/?q=光點台北",
-        image_url: ""
-      },
-      {
-        category: "spot",
-        walk_mins: 15,
-        name_zh: "心中山線形公園",
-        name_en: "Xinzhongshan Linear Park",
-        tag_zh: "台北最潮文創街區 · 週末市集與精品小店",
-        tag_en: "Trendy Cultural Corridor · Weekend Markets & Boutiques",
-        desc_zh: "串聯捷運中山站至雙連站的帶狀綠廊，結合大階梯廣場、公共藝術與週末文創市集，周邊巷弄聚集眾多獨立選物店與質感咖啡廳。",
-        desc_en: "A vibrant green promenade connecting MRT Zhongshan and Shuanglian stations, featuring outdoor art, weekend craft markets, and indie boutiques.",
-        hours: "24 小時開放",
-        map_url: "https://maps.google.com/?q=心中山線形公園",
-        image_url: ""
-      },
-      {
-        category: "shop",
-        walk_mins: 4,
-        name_zh: "全聯福利中心 & 24H 藥妝便利生活圈",
-        name_en: "PX Mart & 24H Drugstore Convenience Zone",
-        tag_zh: "伴手禮採買 · 24小時生活補給",
-        tag_en: "Souvenirs & 24H Daily Essentials",
-        desc_zh: "飯店周邊機能極佳，步行數分鐘內即可抵達全聯超市、屈臣氏、康是美與多間便利商店，購買台灣零食茶葉或日常用品最方便。",
-        desc_en: "Supermarkets, drugstores (Watsons/Cosmed), and convenience stores are all within a 4-minute walk for snacks, tea souvenirs, and essentials.",
-        hours: "08:00 - 23:00 (超商 24H)",
-        map_url: "https://maps.google.com/?q=全聯福利中心+中山長安店",
         image_url: ""
       }
     ];
 
     const CATEGORY_STYLES = {
-      food: { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food" },
-      cafe: { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets" },
-      bar:  { badge: "bg-purple-50 text-purple-800 border-purple-200/80", icon: "🍸", labelZh: "微醺酒吧", labelEn: "Bars & Speakeasy" },
-      spot: { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing" },
-      shop: { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping" }
+      food: { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food", labelJa: "地元グルメ" },
+      cafe: { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets", labelJa: "カフェ・スイーツ" },
+      bar:  { badge: "bg-purple-50 text-purple-800 border-purple-200/80", icon: "🍸", labelZh: "微醺酒吧", labelEn: "Bars & Speakeasy", labelJa: "バー・居酒屋" },
+      spot: { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing", labelJa: "観光・散策" },
+      shop: { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping", labelJa: "お土産・買い物" }
     };
 
     const I18N = {
@@ -358,6 +292,30 @@
         noPhotoText: "No photo available",
         noResults: "No matching places found. Try clearing your filters.",
         resetBtn: "Reset Filters"
+      },
+      ja: {
+        originTag: "出発地：台北市中山区長安東路一段64号（アンビエンスホテル）",
+        title: "アンビエンスホテル｜周辺散策ガイド",
+        subtitle: "ホテルから徒歩圏内の本格台湾グルメ、カフェ、歴史スポット、条通エリアのバー・コンビニをご案内します。",
+        searchPlaceholder: "店名・料理名で検索（例：小籠包、カフェ、バー）...",
+        walkAll: "すべての距離",
+        walk5: "徒歩 5 分以内",
+        walk15: "徒歩 15 分以内",
+        catAll: "すべて表示",
+        catFood: "🍜 地元グルメ",
+        catCafe: "☕ カフェ・スイーツ",
+        catBar: "🍸 バー・居酒屋",
+        catSpot: "🌿 観光・散策",
+        catShop: "🛍️ お土産・買い物",
+        showingCount: "全",
+        placesUnit: "件のおすすめスポット",
+        clickTip: "（カードをタップすると写真と詳細を表示）",
+        walkMins: "徒歩約 {m} 分",
+        openMap: "Google マップで開く",
+        viewPhoto: "写真あり",
+        noPhotoText: "写真は準備中です",
+        noResults: "条件に一致するスポットが見つかりませんでした。",
+        resetBtn: "フィルターをリセット"
       }
     };
 
@@ -367,11 +325,16 @@
     let placesData = [...DEFAULT_PLACES];
     let currentFilteredPlaces = [];
 
-    function toggleLanguage() {
-      currentLang = currentLang === "zh" ? "en" : "zh";
-      document.getElementById("langLabel").textContent = currentLang === "zh" ? "English" : "繁體中文";
-      document.getElementById("searchInput").placeholder = I18N[currentLang].searchPlaceholder;
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll(".lang-btn").forEach(btn => {
+        const isActive = btn.getAttribute("data-lang") === lang;
+        btn.className = isActive
+          ? "lang-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#B48A5A] text-white transition"
+          : "lang-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white transition";
+      });
 
+      document.getElementById("searchInput").placeholder = I18N[currentLang].searchPlaceholder;
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
         if (I18N[currentLang][key]) {
@@ -379,6 +342,22 @@
         }
       });
       renderPlaces();
+    }
+
+    function getLocalizedField(item, fieldBase) {
+      if (currentLang === "ja") {
+        return item[`${fieldBase}_ja`] || item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      }
+      if (currentLang === "en") {
+        return item[`${fieldBase}_en`] || item[`${fieldBase}_zh`] || "";
+      }
+      return item[`${fieldBase}_zh`] || item[`${fieldBase}_en`] || "";
+    }
+
+    function getCategoryLabel(style) {
+      if (currentLang === "ja") return style.labelJa;
+      if (currentLang === "en") return style.labelEn;
+      return style.labelZh;
     }
 
     function setCategory(cat) {
@@ -417,7 +396,7 @@
       currentFilteredPlaces = placesData.filter(item => {
         const matchCat = currentCategory === "all" || (item.category || "").toLowerCase() === currentCategory;
         const matchWalk = currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
-        const searchable = `${item.name_zh} ${item.name_en} ${item.tag_zh} ${item.tag_en} ${item.desc_zh} ${item.desc_en}`.toLowerCase();
+        const searchable = `${item.name_zh} ${item.name_en} ${item.name_ja || ""} ${item.tag_zh} ${item.tag_en} ${item.tag_ja || ""} ${item.desc_zh} ${item.desc_en} ${item.desc_ja || ""}`.toLowerCase();
         const matchQuery = !query || searchable.includes(query);
         return matchCat && matchWalk && matchQuery;
       });
@@ -434,42 +413,39 @@
       grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
         const catKey = (item.category || "food").toLowerCase();
         const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.food;
-        const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
+        const name = getLocalizedField(item, "name");
         const subName = currentLang === "zh" ? item.name_en : item.name_zh;
-        const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
-        const desc = currentLang === "zh" ? item.desc_zh : (item.desc_en || item.desc_zh);
-        const catLabel = currentLang === "zh" ? style.labelZh : style.labelEn;
+        const tag = getLocalizedField(item, "tag");
+        const desc = getLocalizedField(item, "desc");
+        const catLabel = getCategoryLabel(style);
         const walkText = I18N[currentLang].walkMins.replace("{m}", item.walk_mins || 5);
         const hasPhoto = Boolean((item.image_url || "").trim());
 
         return `
           <article onclick="openPlaceModal(${idx})"
                    class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] p-5 shadow-sm hover:shadow-md transition flex flex-col">
-            <!-- 頂部標籤列 -->
             <div class="flex items-center justify-between gap-2 mb-3">
               <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
                 <span>${style.icon}</span>
                 <span>${catLabel}</span>
               </span>
               <div class="flex items-center gap-1.5">
-                ${hasPhoto ? `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#FAF9F6] border border-stone-200 text-[#B48A5A] text-[11px] font-medium" title="點擊檢視實景照片">📷 ${I18N[currentLang].viewPhoto}</span>` : ""}
+                ${hasPhoto ? `<span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#FAF9F6] border border-stone-200 text-[#B48A5A] text-[11px] font-medium">📷 ${I18N[currentLang].viewPhoto}</span>` : ""}
                 <span class="px-2.5 py-1 rounded-lg bg-[#1E293B] text-white text-xs font-medium">
                   🚶 ${walkText}
                 </span>
               </div>
             </div>
 
-            <!-- 店名與副標題 -->
             <div class="mb-2">
               <h2 class="font-bold text-lg text-slate-900 group-hover:text-[#B48A5A] transition leading-snug">${name}</h2>
-              ${subName ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
+              ${subName && subName !== name ? `<p class="text-xs text-slate-400 mt-0.5">${subName}</p>` : ""}
             </div>
 
             ${tag ? `<p class="text-xs font-semibold text-[#B48A5A] mb-2">${tag}</p>` : ""}
 
             <p class="text-sm text-slate-600 leading-relaxed flex-1 line-clamp-3">${desc}</p>
 
-            <!-- 底部營業時間與導航按鈕 -->
             <div class="mt-4 pt-3.5 border-t border-stone-100 flex items-center justify-between gap-2">
               <span class="text-xs text-slate-400 truncate max-w-[55%]" title="${item.hours || ''}">
                 ${item.hours ? `🕒 ${item.hours}` : ""}
@@ -492,16 +468,16 @@
 
       const catKey = (item.category || "food").toLowerCase();
       const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.food;
-      const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
+      const name = getLocalizedField(item, "name");
       const subName = currentLang === "zh" ? item.name_en : item.name_zh;
-      const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
-      const desc = currentLang === "zh" ? item.desc_zh : (item.desc_en || item.desc_zh);
-      const catLabel = currentLang === "zh" ? style.labelZh : style.labelEn;
+      const tag = getLocalizedField(item, "tag");
+      const desc = getLocalizedField(item, "desc");
+      const catLabel = getCategoryLabel(style);
       const walkText = I18N[currentLang].walkMins.replace("{m}", item.walk_mins || 5);
       const cleanImgUrl = (item.image_url || "").trim();
 
       document.getElementById("modalTitle").textContent = name;
-      document.getElementById("modalSubTitle").textContent = subName || "";
+      document.getElementById("modalSubTitle").textContent = (subName && subName !== name) ? subName : "";
       document.getElementById("modalTag").textContent = tag || "";
       document.getElementById("modalDesc").textContent = desc || "";
       document.getElementById("modalHours").textContent = item.hours ? `🕒 ${item.hours}` : "";
@@ -596,7 +572,7 @@
             obj[h] = (row[idx] || "").trim();
           });
           return obj;
-        }).filter(item => item.name_zh || item.name_en);
+        }).filter(item => item.name_zh || item.name_en || item.name_ja);
 
         if (parsed.length > 0) {
           placesData = parsed;
@@ -624,7 +600,7 @@
     }
 
     function downloadSampleCSV() {
-      const headers = ["category", "walk_mins", "name_zh", "name_en", "tag_zh", "tag_en", "desc_zh", "desc_en", "hours", "map_url", "image_url"];
+      const headers = ["category", "walk_mins", "name_zh", "name_en", "tag_zh", "tag_en", "desc_zh", "desc_en", "hours", "map_url", "image_url", "name_ja", "tag_ja", "desc_ja"];
       const csvLines = [
         headers.join(","),
         ...placesData.map(p => headers.map(h => `"${String(p[h] || "").replace(/"/g, '""')}"`).join(","))
@@ -632,7 +608,7 @@
       const blob = new Blob(["\uFEFF" + csvLines.join("\n")], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "ambience_hotel_guide.csv";
+      link.download = "ambience_hotel_guide_trilingual.csv";
       link.click();
     }
 
