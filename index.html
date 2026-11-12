@@ -38,7 +38,7 @@
           喜瑞飯店｜周邊探索指南
         </h1>
         <p class="text-slate-300 text-sm sm:text-base mt-1.5 max-w-xl" data-i18n="subtitle">
-          精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟與 24H 便利生活圈。
+          精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟、條通酒吧與 24H 便利生活圈。
         </p>
       </div>
 
@@ -59,7 +59,7 @@
         <!-- 關鍵字搜尋 -->
         <div class="relative flex-1">
           <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input id="searchInput" type="text" oninput="renderPlaces()" placeholder="搜尋店名、料理或特色（例：豬腳、咖啡、熱炒）..." class="w-full pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-[#B48A5A] focus:ring-1 focus:ring-[#B48A5A]" />
+          <input id="searchInput" type="text" oninput="renderPlaces()" placeholder="搜尋店名、料理或特色（例：豬腳、咖啡、調酒）..." class="w-full pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-[#B48A5A] focus:ring-1 focus:ring-[#B48A5A]" />
         </div>
         <!-- 步行距離篩選 -->
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
@@ -69,11 +69,12 @@
         </div>
       </div>
 
-      <!-- 分類標籤 -->
+      <!-- 分類標籤（已加入 bar 微醺酒吧） -->
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
         <button onclick="setCategory('all')" data-cat="all" class="cat-btn active px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#B48A5A] text-white transition whitespace-nowrap" data-i18n="catAll">全部推薦</button>
         <button onclick="setCategory('food')" data-cat="food" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catFood">🍜 在地美食</button>
         <button onclick="setCategory('cafe')" data-cat="cafe" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catCafe">☕ 咖啡甜點</button>
+        <button onclick="setCategory('bar')" data-cat="bar" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catBar">🍸 微醺酒吧</button>
         <button onclick="setCategory('spot')" data-cat="spot" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catSpot">🌿 景點散步</button>
         <button onclick="setCategory('shop')" data-cat="shop" class="cat-btn px-3.5 py-1.5 rounded-full text-xs font-medium bg-white border border-stone-200 text-slate-600 hover:border-[#B48A5A] transition whitespace-nowrap" data-i18n="catShop">🛍️ 伴手禮 / 生活</button>
       </div>
@@ -112,7 +113,7 @@
 
   <!-- 點擊卡片跳出的「店家詳情與實景照片視窗」 -->
   <div id="placeModal" onclick="if(event.target === this) closePlaceModal()" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 animate-[fadeIn_0.15s_ease-out]">
+    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200">
       <!-- 彈窗頂部圖片區 -->
       <div id="modalImageContainer" class="relative bg-stone-100">
         <img id="modalImage" src="" alt="" class="w-full max-h-72 object-cover hidden" />
@@ -161,7 +162,7 @@
       </div>
       <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
         <p>目前已成功綁定您的 Google 試算表發佈網址。修改試算表後約 <strong>3～5 分鐘</strong>會自動同步至此網頁。</p>
-        <p>卡片列表維持簡潔文字排版，點擊任一卡片即可跳出視窗顯示試算表 <code>image_url</code> 欄位設定的照片（例如 <code>fuhang.jpg</code>）。</p>
+        <p>分類代碼（<code>category</code>）：<code>food</code>（美食）、<code>cafe</code>（咖啡）、<code>bar</code>（酒吧）、<code>spot</code>（景點）、<code>shop</code>（生活採買）。</p>
       </div>
       <div class="pt-2 flex flex-wrap gap-2">
         <button onclick="downloadSampleCSV()" class="px-3.5 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-xs font-medium transition">
@@ -209,6 +210,32 @@
         image_url: ""
       },
       {
+        category: "bar",
+        walk_mins: 6,
+        name_zh: "Bar Trench Taipei（條通經典日式調酒）",
+        name_en: "Bar Trench Taipei",
+        tag_zh: "東京名店分店 · 職人藥草系經典調酒",
+        tag_en: "Tokyo Originated · Herbal & Classic Cocktails",
+        desc_zh: "源自東京惠比壽的知名日式酒吧，隱身林森條通巷弄中，以細膩冰雕技術與苦艾酒、藥草系經典調酒聞名，氛圍沉穩迷人。",
+        desc_en: "An acclaimed Japanese cocktail bar originating from Ebisu, Tokyo, tucked in the Tiaotong alleys and famed for hand-carved ice and herbal classics.",
+        hours: "19:00 - 02:00 (週日公休)",
+        map_url: "https://maps.google.com/?q=Bar+Trench+Taipei",
+        image_url: ""
+      },
+      {
+        category: "bar",
+        walk_mins: 7,
+        name_zh: "菱玖洋服 Le Kief（復古西裝店 Speakeasy）",
+        name_en: "Le Kief",
+        tag_zh: "神秘電話亭機關 · 亞洲五十大酒吧團隊",
+        tag_en: "Secret Speakeasy · Asia's 50 Best Team",
+        desc_zh: "外觀是質感英倫手工西裝店，按對老式電話密碼才會開啟暗門進入低調奢華的調酒空間，結合台灣茶與在地食材打造創意特調。",
+        desc_en: "Disguised as a bespoke tailor shop, dial the vintage phone code to enter this plush speakeasy serving creative cocktails infused with Taiwanese tea.",
+        hours: "19:00 - 02:00 (週五、六至 03:00)",
+        map_url: "https://maps.google.com/?q=Le+Kief+菱玖洋服",
+        image_url: ""
+      },
+      {
         category: "food",
         walk_mins: 12,
         name_zh: "富霸王豬腳極品餐廳",
@@ -248,16 +275,16 @@
         image_url: ""
       },
       {
-        category: "food",
-        walk_mins: 5,
-        name_zh: "條通文化日式居酒屋（林森北路六條通）",
-        name_en: "Tiaotong Izakaya District (Linsen N. Rd.)",
-        tag_zh: "百年日式風情 · 職人串燒與深夜食堂",
-        tag_en: "Historic Japanese Quarter · Yakitori & Sake",
-        desc_zh: "承襲日治時期大正町歷史底蘊的巷弄商圈，聚集眾多道地日式居酒屋、燒鳥與昭和風酒吧，夜晚散步別具異國情調。",
-        desc_en: "Steeped in Japanese-era heritage, these atmospheric alleys feature authentic yakitori joints, izakayas, and Showa-style bars.",
-        hours: "18:00 - 01:00",
-        map_url: "https://maps.google.com/?q=林森北路六條通",
+        category: "spot",
+        walk_mins: 15,
+        name_zh: "心中山線形公園",
+        name_en: "Xinzhongshan Linear Park",
+        tag_zh: "台北最潮文創街區 · 週末市集與精品小店",
+        tag_en: "Trendy Cultural Corridor · Weekend Markets & Boutiques",
+        desc_zh: "串聯捷運中山站至雙連站的帶狀綠廊，結合大階梯廣場、公共藝術與週末文創市集，周邊巷弄聚集眾多獨立選物店與質感咖啡廳。",
+        desc_en: "A vibrant green promenade connecting MRT Zhongshan and Shuanglian stations, featuring outdoor art, weekend craft markets, and indie boutiques.",
+        hours: "24 小時開放",
+        map_url: "https://maps.google.com/?q=心中山線形公園",
         image_url: ""
       },
       {
@@ -272,25 +299,13 @@
         hours: "08:00 - 23:00 (超商 24H)",
         map_url: "https://maps.google.com/?q=全聯福利中心+中山長安店",
         image_url: ""
-      },
-      {
-        category: "food",
-        walk_mins: 12,
-        name_zh: "阿城鵝肉 吉林總店",
-        name_en: "A-Cheng Goose (Jilin Main Store)",
-        tag_zh: "米其林必比登推介 · 招牌煙燻鵝肉",
-        tag_en: "Michelin Bib Gourmand · Smoked Goose",
-        desc_zh: "連續多年榮獲米其林必比登推介，必點鮮嫩多汁的煙燻鵝肉、麻辣血旺與杏鮑菇香腸，晚餐時段建議提前線上抽號碼牌。",
-        desc_en: "Multi-year Michelin Bib Gourmand honoree famed for juicy smoked goose, spicy duck blood, and king oyster mushroom sausage.",
-        hours: "11:30 - 21:00",
-        map_url: "https://maps.google.com/?q=阿城鵝肉+吉林店",
-        image_url: ""
       }
     ];
 
     const CATEGORY_STYLES = {
       food: { badge: "bg-amber-50 text-amber-800 border-amber-200/80", icon: "🍜", labelZh: "在地美食", labelEn: "Local Food" },
       cafe: { badge: "bg-stone-100 text-stone-700 border-stone-200", icon: "☕", labelZh: "咖啡甜點", labelEn: "Cafe & Sweets" },
+      bar:  { badge: "bg-purple-50 text-purple-800 border-purple-200/80", icon: "🍸", labelZh: "微醺酒吧", labelEn: "Bars & Speakeasy" },
       spot: { badge: "bg-emerald-50 text-emerald-800 border-emerald-200/80", icon: "🌿", labelZh: "景點散步", labelEn: "Sightseeing" },
       shop: { badge: "bg-sky-50 text-sky-800 border-sky-200/80", icon: "🛍️", labelZh: "伴手禮 / 生活", labelEn: "Shopping" }
     };
@@ -299,14 +314,15 @@
       zh: {
         originTag: "出發點：台北市中山區長安東路一段64號",
         title: "喜瑞飯店｜周邊探索指南",
-        subtitle: "精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟與 24H 便利生活圈。",
-        searchPlaceholder: "搜尋店名、料理或特色（例：豬腳、咖啡、熱炒）...",
+        subtitle: "精選飯店步行可達的道地台式美食、職人咖啡、林蔭古蹟、條通酒吧與 24H 便利生活圈。",
+        searchPlaceholder: "搜尋店名、料理或特色（例：豬腳、咖啡、調酒）...",
         walkAll: "全部距離",
         walk5: "步行 5 分鐘內",
         walk15: "步行 15 分鐘內",
         catAll: "全部推薦",
         catFood: "🍜 在地美食",
         catCafe: "☕ 咖啡甜點",
+        catBar: "🍸 微醺酒吧",
         catSpot: "🌿 景點散步",
         catShop: "🛍️ 伴手禮 / 生活",
         showingCount: "共顯示",
@@ -322,14 +338,15 @@
       en: {
         originTag: "Origin: No. 64, Sec. 1, Chang'an E. Rd., Zhongshan Dist.",
         title: "Ambience Hotel｜Neighborhood Guide",
-        subtitle: "Curated local eats, specialty cafes, historic landmarks, and 24H convenience within walking distance.",
-        searchPlaceholder: "Search name, cuisine, or tag (e.g. Goose, Cafe, Stir-fry)...",
+        subtitle: "Curated local eats, specialty cafes, historic landmarks, Tiaotong bars, and 24H convenience within walking distance.",
+        searchPlaceholder: "Search name, cuisine, or tag (e.g. Goose, Cafe, Cocktail)...",
         walkAll: "All Distances",
         walk5: "Within 5 mins",
         walk15: "Within 15 mins",
         catAll: "All Picks",
         catFood: "🍜 Local Food",
         catCafe: "☕ Cafe & Sweets",
+        catBar: "🍸 Bars & Speakeasy",
         catSpot: "🌿 Sightseeing",
         catShop: "🛍️ Shopping",
         showingCount: "Showing",
@@ -398,7 +415,7 @@
       const emptyState = document.getElementById("emptyState");
 
       currentFilteredPlaces = placesData.filter(item => {
-        const matchCat = currentCategory === "all" || item.category === currentCategory;
+        const matchCat = currentCategory === "all" || (item.category || "").toLowerCase() === currentCategory;
         const matchWalk = currentWalkFilter === "all" || Number(item.walk_mins) <= Number(currentWalkFilter);
         const searchable = `${item.name_zh} ${item.name_en} ${item.tag_zh} ${item.tag_en} ${item.desc_zh} ${item.desc_en}`.toLowerCase();
         const matchQuery = !query || searchable.includes(query);
@@ -415,7 +432,8 @@
 
       emptyState.classList.add("hidden");
       grid.innerHTML = currentFilteredPlaces.map((item, idx) => {
-        const style = CATEGORY_STYLES[item.category] || CATEGORY_STYLES.food;
+        const catKey = (item.category || "food").toLowerCase();
+        const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.food;
         const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
         const subName = currentLang === "zh" ? item.name_en : item.name_zh;
         const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
@@ -427,7 +445,7 @@
         return `
           <article onclick="openPlaceModal(${idx})"
                    class="group cursor-pointer bg-white rounded-2xl border border-stone-200/90 hover:border-[#B48A5A] p-5 shadow-sm hover:shadow-md transition flex flex-col">
-            <!-- 頂部標籤列（取代原本大圖區） -->
+            <!-- 頂部標籤列 -->
             <div class="flex items-center justify-between gap-2 mb-3">
               <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style.badge}">
                 <span>${style.icon}</span>
@@ -468,12 +486,12 @@
       }).join("");
     }
 
-    // 開啟點擊卡片後的詳情與圖片視窗
     function openPlaceModal(idx) {
       const item = currentFilteredPlaces[idx];
       if (!item) return;
 
-      const style = CATEGORY_STYLES[item.category] || CATEGORY_STYLES.food;
+      const catKey = (item.category || "food").toLowerCase();
+      const style = CATEGORY_STYLES[catKey] || CATEGORY_STYLES.food;
       const name = currentLang === "zh" ? item.name_zh : (item.name_en || item.name_zh);
       const subName = currentLang === "zh" ? item.name_en : item.name_zh;
       const tag = currentLang === "zh" ? item.tag_zh : (item.tag_en || item.tag_zh);
@@ -519,7 +537,6 @@
       document.getElementById("placeModal").classList.add("hidden");
     }
 
-    // 支援按 ESC 鍵關閉彈窗
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
         closePlaceModal();
